@@ -1,0 +1,42 @@
+@use 'reset';
+@use 'variables' as *;
+@use 'typography';
+@use 'animations';
+@use 'locomotive';
+
+// ── Selection ────────────────────────────────────────────
+::selection {
+  background: rgba(245, 158, 11, 0.3);
+  color: $color-text;
+}
+
+// ── Scrollbar ────────────────────────────────────────────
+:root {
+  scrollbar-width: thin;
+  scrollbar-color: $color-border $color-bg;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: $color-bg; }
+::-webkit-scrollbar-thumb {
+  background: $color-border;
+  border-radius: 4px;
+  &:hover { background: $color-text-faint; }
+}
+
+// ── Focus visible ────────────────────────────────────────
+:focus-visible {
+  outline: 2px solid $color-accent;
+  outline-offset: 2px;
+}
+
+// ── Page layout ──────────────────────────────────────────
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}

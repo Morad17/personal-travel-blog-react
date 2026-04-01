@@ -1,0 +1,28 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: $navbar-height;
+  overflow: hidden;
+}
+
+.header {
+  padding: $space-6 $space-8;
+  flex-shrink: 0;
+}
+
+.label { @include label-text; display: block; margin-bottom: $space-2; }
+
+.title {
+  @include display-heading;
+  font-size: $text-3xl;
+}
+
+.mapContainer {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}

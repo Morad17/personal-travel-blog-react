@@ -1,0 +1,102 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  background: $color-surface;
+  border-left: 1px solid $color-border;
+  z-index: $z-overlay;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.close {
+  position: absolute;
+  top: $space-4;
+  right: $space-4;
+  color: $color-text-muted;
+  padding: $space-2;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  z-index: 1;
+  @include focus-ring;
+
+  &:hover {
+    color: $color-text;
+    background: $color-surface-2;
+  }
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, $color-surface 100%);
+}
+
+.body {
+  padding: $space-6;
+}
+
+.flag {
+  font-size: 3rem;
+  margin-bottom: $space-3;
+  line-height: 1;
+}
+
+.name {
+  font-family: $font-display;
+  font-size: $text-2xl;
+  font-weight: 700;
+  color: $color-text;
+  margin-bottom: $space-4;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  margin-bottom: $space-8;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $text-sm;
+  color: $color-text-muted;
+}
+
+.statIcon {
+  color: $color-accent;
+  flex-shrink: 0;
+}
+
+.cta {
+  display: inline-block;
+  padding: $space-3 $space-6;
+  background: $color-accent;
+  color: #000;
+  border-radius: $radius-md;
+  font-weight: 600;
+  font-size: $text-sm;
+  transition: background $transition-base;
+  @include focus-ring;
+
+  &:hover { background: darken(#F59E0B, 8%); }
+}

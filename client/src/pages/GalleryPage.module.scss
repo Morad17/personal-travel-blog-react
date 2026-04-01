@@ -1,0 +1,114 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page {
+  padding-top: calc(#{$navbar-height} + #{$space-16});
+  padding-bottom: $space-24;
+  min-height: 100vh;
+}
+
+.container { @include container; }
+
+.header {
+  text-align: center;
+  margin-bottom: $space-12;
+}
+
+.label { @include label-text; display: block; margin-bottom: $space-3; }
+
+.title {
+  @include display-heading;
+  font-size: $text-5xl;
+  margin-bottom: $space-4;
+
+  @include md { font-size: $text-6xl; }
+}
+
+.subtitle {
+  color: $color-text-muted;
+  font-size: $text-lg;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.filters {
+  display: flex;
+  gap: $space-4;
+  margin-bottom: $space-10;
+  flex-wrap: wrap;
+}
+
+.select {
+  padding: $space-3 $space-4;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text;
+  font-size: $text-sm;
+  @include focus-ring;
+
+  &:focus { border-color: $color-accent; }
+}
+
+.masonry {
+  columns: 2;
+  column-gap: $space-4;
+
+  @include md { columns: 3; }
+  @include lg { columns: 4; }
+}
+
+.item {
+  display: block;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+  break-inside: avoid;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    display: block;
+    transition: transform $transition-slow;
+  }
+
+  &:hover img { transform: scale(1.04); }
+
+  &:hover .caption { opacity: 1; }
+}
+
+.playIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  @include flex-center;
+  pointer-events: none;
+}
+
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $space-4;
+  background: linear-gradient(transparent, rgba(10, 10, 15, 0.9));
+  color: $color-text;
+  font-size: $text-sm;
+  opacity: 0;
+  transition: opacity $transition-base;
+}
+
+.skeletonItem {
+  width: 100%;
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+  break-inside: avoid;
+}

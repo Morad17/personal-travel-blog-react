@@ -1,0 +1,145 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  @include flex-center;
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: $z-below;
+}
+
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 10, 15, 0.85) 0%,
+    rgba(10, 10, 15, 0.5) 50%,
+    rgba(10, 10, 15, 0.7) 100%
+  );
+  z-index: 1;
+}
+
+.bgPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    #0f1923 0%,
+    #1a2535 30%,
+    #0d1b2a 60%,
+    #1a1a26 100%
+  );
+
+  // Replace with background-image when you have a hero photo
+  // background-image: url('...');
+  // background-size: cover;
+  // background-position: center;
+}
+
+.content {
+  position: relative;
+  z-index: $z-raised;
+  @include container;
+  text-align: center;
+  padding-top: $navbar-height;
+
+  @include lg { text-align: left; }
+}
+
+.eyebrow {
+  @include label-text;
+  display: block;
+  margin-bottom: $space-6;
+}
+
+.title {
+  @include display-heading;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  color: $color-text;
+  margin-bottom: $space-6;
+  line-height: 0.95;
+
+  em {
+    font-style: italic;
+    color: $color-accent;
+  }
+}
+
+.subtitle {
+  font-size: $text-lg;
+  color: $color-text-muted;
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: $space-10;
+
+  @include lg { margin-left: 0; }
+
+  margin-inline: auto;
+}
+
+.ctas {
+  display: flex;
+  gap: $space-4;
+  justify-content: center;
+
+  @include lg { justify-content: flex-start; }
+}
+
+.btnPrimary {
+  padding: $space-4 $space-8;
+  background: $color-accent;
+  color: #000;
+  border-radius: $radius-md;
+  font-weight: 600;
+  font-size: $text-base;
+  transition: background $transition-base, transform $transition-fast;
+  @include focus-ring;
+
+  &:hover {
+    background: darken(#F59E0B, 8%);
+    transform: translateY(-2px);
+  }
+}
+
+.btnSecondary {
+  padding: $space-4 $space-8;
+  background: transparent;
+  color: $color-text;
+  border: 1px solid rgba(241, 245, 249, 0.3);
+  border-radius: $radius-md;
+  font-weight: 500;
+  font-size: $text-base;
+  transition: all $transition-base;
+  @include focus-ring;
+
+  &:hover {
+    border-color: $color-text;
+    background: rgba(241, 245, 249, 0.05);
+  }
+}
+
+.scrollBtn {
+  position: absolute;
+  bottom: $space-8;
+  left: 50%;
+  transform: translateX(-50%);
+  color: $color-text-muted;
+  animation: fadeUp 1s ease infinite alternate;
+  transition: color $transition-base;
+  @include focus-ring;
+
+  &:hover { color: $color-accent; }
+}
+
+@keyframes fadeUp {
+  from { transform: translateX(-50%) translateY(0); }
+  to   { transform: translateX(-50%) translateY(-8px); }
+}

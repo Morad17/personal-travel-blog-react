@@ -1,0 +1,64 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.footer {
+  border-top: 1px solid $color-border;
+  background: $color-surface;
+  margin-top: auto;
+}
+
+.inner {
+  @include container;
+  padding-top: $space-12;
+  padding-bottom: $space-12;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-8;
+  align-items: start;
+
+  @include md {
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+}
+
+.brand {}
+
+.logo {
+  font-family: $font-display;
+  font-size: $text-xl;
+  font-weight: 700;
+  color: $color-text;
+  display: inline-block;
+  margin-bottom: $space-2;
+  transition: opacity $transition-base;
+
+  &:hover { opacity: 0.8; }
+}
+
+.dot { color: $color-accent; }
+
+.tagline {
+  color: $color-text-faint;
+  font-size: $text-sm;
+}
+
+.links {
+  display: flex;
+  gap: $space-6;
+
+  a {
+    font-size: $text-sm;
+    color: $color-text-muted;
+    transition: color $transition-base;
+
+    &:hover { color: $color-accent; }
+  }
+}
+
+.copy {
+  font-size: $text-xs;
+  color: $color-text-faint;
+
+  @include md { text-align: right; }
+}

@@ -1,0 +1,76 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  @include glass-surface;
+  padding: $space-2 $space-4;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  color: $color-text;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  white-space: nowrap;
+  z-index: $z-overlay;
+  box-shadow: $shadow-md;
+}
+
+.visitedDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $color-accent;
+  flex-shrink: 0;
+}
+
+.postCount {
+  color: $color-accent;
+  font-size: $text-xs;
+  font-weight: 600;
+}
+
+.legend {
+  position: absolute;
+  bottom: $space-8;
+  left: $space-6;
+  @include glass-surface;
+  border-radius: $radius-md;
+  padding: $space-3 $space-5;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  z-index: $z-overlay;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  font-size: $text-xs;
+  color: $color-text-muted;
+}
+
+.dotVisited {
+  width: 12px;
+  height: 12px;
+  border-radius: $radius-sm;
+  background: rgba(245, 158, 11, 0.85);
+  flex-shrink: 0;
+}
+
+.dotUnvisited {
+  width: 12px;
+  height: 12px;
+  border-radius: $radius-sm;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid $color-border;
+  flex-shrink: 0;
+}

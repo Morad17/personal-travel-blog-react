@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Country {
+  id            String        @id @default(cuid())
+  name          String        @unique
+  slug          String        @unique
+  isoCode       String        @unique
+  flagEmoji     String
+  coverImageId  String?
+  coverImageUrl String?
+  visitedAt     DateTime?
+  featured      Boolean       @default(false)
+  posts         Post[]
+  galleryItems  GalleryItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Post {
+  id            String      @id @default(cuid())
+  title         String
+  slug          String      @unique
+  excerpt       String
+  content       String
+  coverImageId  String?
+  coverImageUrl String?
+  readTime      Int         @default(1)
+  published     Boolean     @default(false)
+  featured      Boolean     @default(false)
+  tags          String[]
+  countryId     String
+  country       Country     @relation(fields: [countryId], references: [id])
+  mediaItems    PostMedia[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model PostMedia {
+  id           String   @id @default(cuid())
+  publicId     String
+  secureUrl    String
+  resourceType String
+  caption      String?
+  order        Int      @default(0)
+  postId       String
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+}
+
+model GalleryItem {
+  id           String   @id @default(cuid())
+  publicId     String
+  secureUrl    String
+  thumbnailUrl String
+  resourceType String
+  width        Int?
+  height       Int?
+  caption      String?
+  tags         String[]
+  countryId    String?
+  country      Country? @relation(fields: [countryId], references: [id])
+  createdAt    DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

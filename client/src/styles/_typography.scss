@@ -1,0 +1,118 @@
+@use 'variables' as *;
+
+// ── Font imports ─────────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+// ── Base ─────────────────────────────────────────────────
+body {
+  font-family: $font-body;
+  font-size: $text-base;
+  font-weight: 400;
+  line-height: 1.6;
+  color: $color-text;
+  background-color: $color-bg;
+}
+
+// ── Heading defaults ────────────────────────────────────
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-display;
+  font-weight: 700;
+  line-height: 1.2;
+  color: $color-text;
+}
+
+h1 { font-size: $text-4xl; }
+h2 { font-size: $text-3xl; }
+h3 { font-size: $text-2xl; }
+h4 { font-size: $text-xl; }
+h5 { font-size: $text-lg; }
+h6 { font-size: $text-base; }
+
+p { line-height: 1.75; }
+
+// ── Blog/prose content ───────────────────────────────────
+.prose {
+  color: $color-text;
+  line-height: 1.8;
+  font-size: $text-lg;
+
+  h2 {
+    font-family: $font-display;
+    font-size: $text-2xl;
+    margin-top: 2.5em;
+    margin-bottom: 0.75em;
+    color: $color-text;
+  }
+
+  h3 {
+    font-family: $font-display;
+    font-size: $text-xl;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    color: $color-text;
+  }
+
+  p { margin-bottom: 1.5em; }
+
+  a {
+    color: $color-accent;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  blockquote {
+    border-left: 3px solid $color-accent;
+    padding-left: $space-6;
+    margin: $space-8 0;
+    font-style: italic;
+    color: $color-text-muted;
+    font-family: $font-display;
+    font-size: $text-xl;
+  }
+
+  img {
+    width: 100%;
+    border-radius: $radius-lg;
+    margin: $space-8 0;
+  }
+
+  ul, ol {
+    margin-bottom: 1.5em;
+    padding-left: $space-6;
+  }
+
+  ul { list-style: disc; }
+  ol { list-style: decimal; }
+
+  li { margin-bottom: 0.5em; }
+
+  code {
+    font-family: $font-mono;
+    font-size: 0.875em;
+    background: $color-surface-2;
+    padding: 0.2em 0.4em;
+    border-radius: $radius-sm;
+    color: $color-accent;
+  }
+
+  pre {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-6;
+    overflow-x: auto;
+    margin: $space-8 0;
+
+    code {
+      background: none;
+      padding: 0;
+      color: $color-text;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid $color-border;
+    margin: $space-12 0;
+  }
+}
