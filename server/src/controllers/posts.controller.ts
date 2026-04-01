@@ -8,6 +8,10 @@ function estimateReadTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+function param(req: Request, key: string): string {
+  return req.params[key] as string;
+}
+
 export async function getPosts(req: Request, res: Response): Promise<void> {
   const { country, tag, page = '1', limit = '9' } = req.query as Record<string, string>;
   const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -43,7 +47,7 @@ export async function getFeaturedPosts(_req: Request, res: Response): Promise<vo
 }
 
 export async function getPostBySlug(req: Request, res: Response): Promise<void> {
-  const { slug } = req.params;
+  const slug = param(req, 'slug');
   const post = await prisma.post.findUnique({
     where: { slug },
     include: {
@@ -65,7 +69,7 @@ export async function createPost(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const file = req.file as Express.Multer.File & { path?: string; filename?: string };
+  const file = req.file as (Express.Multer.File & { path?: string; filename?: string }) | undefined;
   const coverImageId = file?.filename;
   const coverImageUrl = file?.path;
 
@@ -83,7 +87,7 @@ export async function createPost(req: Request, res: Response): Promise<void> {
 }
 
 export async function updatePost(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
+  const id = param(req, 'id');
   const parsed = updatePostSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });
@@ -96,7 +100,7 @@ export async function updatePost(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const file = req.file as Express.Multer.File & { path?: string; filename?: string };
+  const file = req.file as (Express.Multer.File & { path?: string; filename?: string }) | undefined;
   let coverImageId = existing.coverImageId ?? undefined;
   let coverImageUrl = existing.coverImageUrl ?? undefined;
 
@@ -122,7 +126,7 @@ export async function updatePost(req: Request, res: Response): Promise<void> {
 }
 
 export async function deletePost(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
+  const id = param(req, 'id');
   const existing = await prisma.post.findUnique({
     where: { id },
     include: { mediaItems: true },
@@ -144,8 +148,8 @@ export async function deletePost(req: Request, res: Response): Promise<void> {
 }
 
 export async function addPostMedia(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
-  const files = req.files as (Express.Multer.File & { path?: string; filename?: string; mimetype: string })[];
+  const id = param(req, 'id');
+  const files = req.files as (Express.Multer.File & { path?: string; filename?: string })[] | undefined;
 
   if (!files?.length) {
     res.status(400).json({ error: 'No files uploaded' });
@@ -156,7 +160,7 @@ export async function addPostMedia(req: Request, res: Response): Promise<void> {
     files.map((file, index) =>
       prisma.postMedia.create({
         data: {
-          publicId: file.filename,
+          publicId: file.filename ?? '',
           secureUrl: file.path ?? '',
           resourceType: file.mimetype.startsWith('video') ? 'video' : 'image',
           order: index,
@@ -169,7 +173,7 @@ export async function addPostMedia(req: Request, res: Response): Promise<void> {
 }
 
 export async function deletePostMedia(req: Request, res: Response): Promise<void> {
-  const { mediaId } = req.params;
+  const mediaId = param(req, 'mediaId');
   const media = await prisma.postMedia.findUnique({ where: { id: mediaId } });
   if (!media) {
     res.status(404).json({ error: 'Media not found' });

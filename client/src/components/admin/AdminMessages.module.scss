@@ -1,0 +1,74 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.unread {
+  font-size: $text-sm;
+  color: $color-accent;
+  font-weight: 600;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.message {
+  @include glass-surface;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  transition: border-color $transition-base;
+
+  &:not(.read) { border-color: rgba(245,158,11,0.3); }
+}
+
+.read { opacity: 0.6; }
+
+.msgHeader {
+  @include flex-between;
+  margin-bottom: $space-3;
+  gap: $space-4;
+  flex-wrap: wrap;
+}
+
+.sender {
+  font-weight: 600;
+  color: $color-text;
+  margin-right: $space-3;
+}
+
+.email { font-size: $text-sm; color: $color-text-muted; }
+
+.msgRight {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+}
+
+.date { font-size: $text-xs; color: $color-text-faint; }
+
+.markRead {
+  font-size: $text-xs;
+  color: $color-accent;
+  @include focus-ring;
+  &:hover { opacity: 0.7; }
+}
+
+.subject {
+  font-weight: 600;
+  color: $color-text;
+  margin-bottom: $space-2;
+}
+
+.body {
+  font-size: $text-sm;
+  color: $color-text-muted;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.empty {
+  color: $color-text-muted;
+  text-align: center;
+  padding: $space-12 0;
+}

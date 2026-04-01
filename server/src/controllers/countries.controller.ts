@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { prisma } from '../config/database';
-import { deleteAsset, getThumbnailUrl } from '../services/cloudinary.service';
+import { deleteAsset } from '../services/cloudinary.service';
 import { createCountrySchema, updateCountrySchema } from '../validations/country.schema';
+
+function param(req: Request, key: string): string {
+  return req.params[key] as string;
+}
 
 export async function getCountries(_req: Request, res: Response): Promise<void> {
   const countries = await prisma.country.findMany({
@@ -14,7 +18,7 @@ export async function getCountries(_req: Request, res: Response): Promise<void> 
 }
 
 export async function getCountryBySlug(req: Request, res: Response): Promise<void> {
-  const { slug } = req.params;
+  const slug = param(req, 'slug');
   const country = await prisma.country.findUnique({
     where: { slug },
     include: {
@@ -38,14 +42,9 @@ export async function createCountry(req: Request, res: Response): Promise<void> 
     return;
   }
 
-  const file = req.file as Express.Multer.File & { path?: string; public_id?: string; filename?: string };
-  let coverImageId: string | undefined;
-  let coverImageUrl: string | undefined;
-
-  if (file) {
-    coverImageId = file.filename || file.public_id;
-    coverImageUrl = file.path;
-  }
+  const file = req.file as (Express.Multer.File & { path?: string; filename?: string }) | undefined;
+  const coverImageId = file?.filename;
+  const coverImageUrl = file?.path;
 
   const country = await prisma.country.create({
     data: {
@@ -59,7 +58,7 @@ export async function createCountry(req: Request, res: Response): Promise<void> 
 }
 
 export async function updateCountry(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
+  const id = param(req, 'id');
   const parsed = updateCountrySchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.flatten() });
@@ -72,7 +71,7 @@ export async function updateCountry(req: Request, res: Response): Promise<void> 
     return;
   }
 
-  const file = req.file as Express.Multer.File & { path?: string; filename?: string };
+  const file = req.file as (Express.Multer.File & { path?: string; filename?: string }) | undefined;
   let coverImageId = existing.coverImageId ?? undefined;
   let coverImageUrl = existing.coverImageUrl ?? undefined;
 
@@ -95,7 +94,7 @@ export async function updateCountry(req: Request, res: Response): Promise<void> 
 }
 
 export async function deleteCountry(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
+  const id = param(req, 'id');
   const existing = await prisma.country.findUnique({ where: { id } });
   if (!existing) {
     res.status(404).json({ error: 'Country not found' });

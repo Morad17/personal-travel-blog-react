@@ -1,0 +1,185 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.form {
+  @include glass-surface;
+  border-radius: $radius-xl;
+  padding: $space-8;
+}
+
+.formHeader {
+  @include flex-between;
+  margin-bottom: $space-6;
+
+  h3 {
+    font-family: $font-display;
+    font-size: $text-xl;
+    color: $color-text;
+  }
+}
+
+.closeBtn {
+  color: $color-text-muted;
+  font-size: $text-lg;
+  padding: $space-1 $space-3;
+  @include focus-ring;
+  &:hover { color: $color-text; }
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-4;
+  margin-bottom: $space-4;
+
+  @include md { grid-template-columns: 1fr 1fr; }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  margin-bottom: $space-4;
+
+  label {
+    font-size: $text-sm;
+    color: $color-text-muted;
+    font-weight: 500;
+  }
+}
+
+.input,
+.textarea,
+.select {
+  padding: $space-3 $space-4;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text;
+  font-size: $text-sm;
+  @include focus-ring;
+
+  &:focus { border-color: $color-accent; outline: none; }
+}
+
+.textarea { resize: vertical; }
+
+.fileInput {
+  color: $color-text-muted;
+  font-size: $text-sm;
+}
+
+.preview {
+  max-height: 120px;
+  border-radius: $radius-md;
+  object-fit: cover;
+  margin-top: $space-2;
+}
+
+.editorToolbar {
+  display: flex;
+  gap: $space-2;
+  padding: $space-2;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-bottom: none;
+  border-radius: $radius-md $radius-md 0 0;
+
+  button {
+    padding: $space-1 $space-3;
+    font-size: $text-sm;
+    font-weight: 600;
+    color: $color-text-muted;
+    border-radius: $radius-sm;
+    transition: all $transition-base;
+    @include focus-ring;
+
+    &:hover { color: $color-text; background: $color-border; }
+  }
+}
+
+.active { color: $color-accent !important; background: rgba(245,158,11,0.1) !important; }
+
+.editor {
+  border: 1px solid $color-border;
+  border-radius: 0 0 $radius-md $radius-md;
+  min-height: 280px;
+  background: $color-surface-2;
+
+  :global(.ProseMirror) {
+    padding: $space-4;
+    min-height: 280px;
+    outline: none;
+    font-size: $text-base;
+    line-height: 1.7;
+    color: $color-text;
+
+    p.is-editor-empty:first-child::before {
+      content: attr(data-placeholder);
+      color: $color-text-faint;
+      pointer-events: none;
+      float: left;
+      height: 0;
+    }
+
+    h2 { font-size: $text-2xl; font-family: $font-display; margin: 1.5em 0 0.5em; }
+    h3 { font-size: $text-xl; font-family: $font-display; margin: 1.2em 0 0.4em; }
+    p  { margin-bottom: 1em; }
+    blockquote {
+      border-left: 3px solid $color-accent;
+      padding-left: $space-4;
+      color: $color-text-muted;
+      font-style: italic;
+    }
+  }
+}
+
+.checkboxRow {
+  display: flex;
+  gap: $space-6;
+  margin-bottom: $space-6;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $text-sm;
+  color: $color-text-muted;
+  cursor: pointer;
+
+  input { accent-color: $color-accent; }
+}
+
+.err {
+  font-size: $text-xs;
+  color: $color-error;
+}
+
+.formActions {
+  display: flex;
+  gap: $space-4;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  padding: $space-3 $space-6;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text-muted;
+  font-size: $text-sm;
+  @include focus-ring;
+  &:hover { border-color: $color-text; color: $color-text; }
+}
+
+.saveBtn {
+  padding: $space-3 $space-6;
+  background: $color-accent;
+  color: #000;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 600;
+  @include focus-ring;
+  &:disabled { opacity: 0.6; }
+  &:hover:not(:disabled) { background: darken(#F59E0B, 8%); }
+}

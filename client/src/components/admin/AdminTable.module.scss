@@ -1,0 +1,93 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.toolbar {
+  @include flex-between;
+  margin-bottom: $space-6;
+}
+
+.heading {
+  font-family: $font-display;
+  font-size: $text-2xl;
+  color: $color-text;
+}
+
+.createBtn {
+  padding: $space-2 $space-5;
+  background: $color-accent;
+  color: #000;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 600;
+  @include focus-ring;
+  &:hover { background: darken(#F59E0B, 8%); }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $text-sm;
+
+  th {
+    text-align: left;
+    padding: $space-3 $space-4;
+    border-bottom: 1px solid $color-border;
+    color: $color-text-muted;
+    font-weight: 500;
+    font-size: $text-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  td {
+    padding: $space-3 $space-4;
+    border-bottom: 1px solid rgba(30, 30, 46, 0.5);
+    color: $color-text;
+    vertical-align: middle;
+  }
+
+  tr:hover td { background: $color-surface; }
+}
+
+.titleCell {
+  max-width: 280px;
+  @include truncate;
+}
+
+.badge {
+  padding: 2px $space-3;
+  border-radius: $radius-full;
+  font-size: $text-xs;
+  font-weight: 600;
+}
+
+.published { background: rgba(34,197,94,0.15); color: $color-success; }
+.draft { background: $color-surface-2; color: $color-text-faint; }
+
+.actions {
+  display: flex;
+  gap: $space-2;
+}
+
+.editBtn {
+  padding: $space-1 $space-3;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  color: $color-text-muted;
+  font-size: $text-xs;
+  transition: all $transition-base;
+  @include focus-ring;
+  &:hover { border-color: $color-accent; color: $color-accent; }
+}
+
+.deleteBtn {
+  padding: $space-1 $space-3;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: $radius-sm;
+  color: rgba(239, 68, 68, 0.7);
+  font-size: $text-xs;
+  transition: all $transition-base;
+  @include focus-ring;
+  &:hover { background: rgba(239, 68, 68, 0.1); color: $color-error; }
+}

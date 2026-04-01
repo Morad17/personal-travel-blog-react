@@ -8,6 +8,9 @@ exports.deleteCountry = deleteCountry;
 const database_1 = require("../config/database");
 const cloudinary_service_1 = require("../services/cloudinary.service");
 const country_schema_1 = require("../validations/country.schema");
+function param(req, key) {
+    return req.params[key];
+}
 async function getCountries(_req, res) {
     const countries = await database_1.prisma.country.findMany({
         orderBy: { name: 'asc' },
@@ -18,7 +21,7 @@ async function getCountries(_req, res) {
     res.json(countries);
 }
 async function getCountryBySlug(req, res) {
-    const { slug } = req.params;
+    const slug = param(req, 'slug');
     const country = await database_1.prisma.country.findUnique({
         where: { slug },
         include: {
@@ -41,12 +44,8 @@ async function createCountry(req, res) {
         return;
     }
     const file = req.file;
-    let coverImageId;
-    let coverImageUrl;
-    if (file) {
-        coverImageId = file.filename || file.public_id;
-        coverImageUrl = file.path;
-    }
+    const coverImageId = file?.filename;
+    const coverImageUrl = file?.path;
     const country = await database_1.prisma.country.create({
         data: {
             ...parsed.data,
@@ -58,7 +57,7 @@ async function createCountry(req, res) {
     res.status(201).json(country);
 }
 async function updateCountry(req, res) {
-    const { id } = req.params;
+    const id = param(req, 'id');
     const parsed = country_schema_1.updateCountrySchema.safeParse(req.body);
     if (!parsed.success) {
         res.status(400).json({ error: parsed.error.flatten() });
@@ -90,7 +89,7 @@ async function updateCountry(req, res) {
     res.json(country);
 }
 async function deleteCountry(req, res) {
-    const { id } = req.params;
+    const id = param(req, 'id');
     const existing = await database_1.prisma.country.findUnique({ where: { id } });
     if (!existing) {
         res.status(404).json({ error: 'Country not found' });

@@ -1,0 +1,58 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  min-height: 100vh;
+  @include flex-center;
+  padding: $space-8;
+}
+
+.card {
+  @include glass-surface;
+  border-radius: $radius-xl;
+  padding: $space-10;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: $text-2xl;
+  color: $color-text;
+  margin-bottom: $space-2;
+}
+
+.field {}
+
+.input {
+  width: 100%;
+  padding: $space-3 $space-4;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text;
+  font-size: $text-base;
+  @include focus-ring;
+
+  &:focus { border-color: $color-accent; outline: none; }
+  &::placeholder { color: $color-text-faint; }
+}
+
+.error {
+  color: $color-error;
+  font-size: $text-sm;
+}
+
+.btn {
+  padding: $space-3 $space-6;
+  background: $color-accent;
+  color: #000;
+  border-radius: $radius-md;
+  font-weight: 600;
+  @include focus-ring;
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}

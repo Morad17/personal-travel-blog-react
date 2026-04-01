@@ -15,6 +15,9 @@ function estimateReadTime(content) {
     const words = content.replace(/<[^>]*>/g, '').split(/\s+/).length;
     return Math.max(1, Math.ceil(words / 200));
 }
+function param(req, key) {
+    return req.params[key];
+}
 async function getPosts(req, res) {
     const { country, tag, page = '1', limit = '9' } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -45,7 +48,7 @@ async function getFeaturedPosts(_req, res) {
     res.json(posts);
 }
 async function getPostBySlug(req, res) {
-    const { slug } = req.params;
+    const slug = param(req, 'slug');
     const post = await database_1.prisma.post.findUnique({
         where: { slug },
         include: {
@@ -81,7 +84,7 @@ async function createPost(req, res) {
     res.status(201).json(post);
 }
 async function updatePost(req, res) {
-    const { id } = req.params;
+    const id = param(req, 'id');
     const parsed = post_schema_1.updatePostSchema.safeParse(req.body);
     if (!parsed.success) {
         res.status(400).json({ error: parsed.error.flatten() });
@@ -116,7 +119,7 @@ async function updatePost(req, res) {
     res.json(post);
 }
 async function deletePost(req, res) {
-    const { id } = req.params;
+    const id = param(req, 'id');
     const existing = await database_1.prisma.post.findUnique({
         where: { id },
         include: { mediaItems: true },
@@ -132,7 +135,7 @@ async function deletePost(req, res) {
     res.status(204).send();
 }
 async function addPostMedia(req, res) {
-    const { id } = req.params;
+    const id = param(req, 'id');
     const files = req.files;
     if (!files?.length) {
         res.status(400).json({ error: 'No files uploaded' });
@@ -140,7 +143,7 @@ async function addPostMedia(req, res) {
     }
     const mediaItems = await Promise.all(files.map((file, index) => database_1.prisma.postMedia.create({
         data: {
-            publicId: file.filename,
+            publicId: file.filename ?? '',
             secureUrl: file.path ?? '',
             resourceType: file.mimetype.startsWith('video') ? 'video' : 'image',
             order: index,
@@ -150,7 +153,7 @@ async function addPostMedia(req, res) {
     res.status(201).json(mediaItems);
 }
 async function deletePostMedia(req, res) {
-    const { mediaId } = req.params;
+    const mediaId = param(req, 'mediaId');
     const media = await database_1.prisma.postMedia.findUnique({ where: { id: mediaId } });
     if (!media) {
         res.status(404).json({ error: 'Media not found' });

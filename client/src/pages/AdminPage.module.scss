@@ -1,0 +1,67 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: $navbar-height;
+}
+
+.header {
+  @include glass-surface;
+  padding: $space-4 $space-6;
+  @include flex-between;
+  position: sticky;
+  top: $navbar-height;
+  z-index: $z-raised;
+  gap: $space-4;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: $text-lg;
+  font-weight: 700;
+  color: $color-accent;
+}
+
+.tabs {
+  display: flex;
+  gap: $space-2;
+}
+
+.tab {
+  padding: $space-2 $space-4;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  color: $color-text-muted;
+  transition: all $transition-base;
+  @include focus-ring;
+
+  &:hover { color: $color-text; background: $color-surface-2; }
+}
+
+.active {
+  color: $color-accent !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+}
+
+.logout {
+  padding: $space-2 $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  color: $color-text-muted;
+  transition: all $transition-base;
+  @include focus-ring;
+
+  &:hover { border-color: $color-error; color: $color-error; }
+}
+
+.content {
+  @include container;
+  padding-top: $space-8;
+  padding-bottom: $space-16;
+  flex: 1;
+}

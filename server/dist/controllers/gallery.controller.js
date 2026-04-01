@@ -7,6 +7,9 @@ exports.deleteGalleryItem = deleteGalleryItem;
 const database_1 = require("../config/database");
 const cloudinary_service_1 = require("../services/cloudinary.service");
 const gallery_schema_1 = require("../validations/gallery.schema");
+function param(req, key) {
+    return req.params[key];
+}
 async function getGallery(req, res) {
     const { country, type, page = '1', limit = '20' } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -34,11 +37,11 @@ async function createGalleryItems(req, res) {
     }
     const { caption, tags, countryId } = req.body;
     const parsedTags = tags
-        ? (typeof tags === 'string' ? tags.split(',').map((t) => t.trim()).filter(Boolean) : tags)
+        ? tags.split(',').map((t) => t.trim()).filter(Boolean)
         : [];
     const items = await Promise.all(files.map((file) => {
         const isVideo = file.mimetype.startsWith('video');
-        const publicId = file.filename;
+        const publicId = file.filename ?? '';
         const secureUrl = file.path ?? '';
         const thumbnailUrl = isVideo
             ? (0, cloudinary_service_1.getVideoThumbnailUrl)(publicId)
@@ -58,7 +61,7 @@ async function createGalleryItems(req, res) {
     res.status(201).json(items);
 }
 async function updateGalleryItem(req, res) {
-    const { id } = req.params;
+    const id = param(req, 'id');
     const parsed = gallery_schema_1.updateGalleryItemSchema.safeParse(req.body);
     if (!parsed.success) {
         res.status(400).json({ error: parsed.error.flatten() });
@@ -71,7 +74,7 @@ async function updateGalleryItem(req, res) {
     res.json(item);
 }
 async function deleteGalleryItem(req, res) {
-    const { id } = req.params;
+    const id = param(req, 'id');
     const item = await database_1.prisma.galleryItem.findUnique({ where: { id } });
     if (!item) {
         res.status(404).json({ error: 'Gallery item not found' });

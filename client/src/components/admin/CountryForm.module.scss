@@ -1,0 +1,77 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.form {
+  @include glass-surface;
+  border-radius: $radius-xl;
+  padding: $space-8;
+  margin-bottom: $space-6;
+}
+
+.header {
+  @include flex-between;
+  margin-bottom: $space-6;
+
+  h3 {
+    font-family: $font-display;
+    font-size: $text-xl;
+    color: $color-text;
+  }
+}
+
+.close { color: $color-text-muted; font-size: $text-lg; @include focus-ring; &:hover { color: $color-text; } }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+  margin-bottom: $space-4;
+}
+
+.input {
+  padding: $space-3 $space-4;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text;
+  font-size: $text-sm;
+  @include focus-ring;
+  &:focus { border-color: $color-accent; outline: none; }
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $text-sm;
+  color: $color-text-muted;
+  input { accent-color: $color-accent; }
+}
+
+.file { color: $color-text-muted; font-size: $text-sm; margin-bottom: $space-4; display: block; }
+
+.actions {
+  display: flex;
+  gap: $space-3;
+  justify-content: flex-end;
+}
+
+.cancel {
+  padding: $space-2 $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text-muted;
+  font-size: $text-sm;
+  @include focus-ring;
+}
+
+.save {
+  padding: $space-2 $space-5;
+  background: $color-accent;
+  color: #000;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 600;
+  @include focus-ring;
+  &:disabled { opacity: 0.6; }
+}

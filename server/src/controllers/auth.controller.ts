@@ -25,7 +25,7 @@ export async function login(req: Request, res: Response): Promise<void> {
   }
 
   const token = jwt.sign({ adminId: admin.id }, env.JWT_SECRET, {
-    expiresIn: env.JWT_EXPIRES_IN,
+    expiresIn: env.JWT_EXPIRES_IN as `${number}${'s' | 'm' | 'h' | 'd' | 'w' | 'y'}`,
   });
 
   res.json({ token, expiresIn: env.JWT_EXPIRES_IN });

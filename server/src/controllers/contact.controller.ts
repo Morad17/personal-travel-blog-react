@@ -3,6 +3,10 @@ import { prisma } from '../config/database';
 import { sendContactEmail } from '../services/email.service';
 import { contactSchema } from '../validations/contact.schema';
 
+function param(req: Request, key: string): string {
+  return req.params[key] as string;
+}
+
 export async function submitContact(req: Request, res: Response): Promise<void> {
   const parsed = contactSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -26,7 +30,7 @@ export async function getMessages(_req: Request, res: Response): Promise<void> {
 }
 
 export async function markRead(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
+  const id = param(req, 'id');
   const message = await prisma.contactMessage.update({
     where: { id },
     data: { read: true },

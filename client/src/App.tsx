@@ -9,6 +9,7 @@ import PostDetailPage from './pages/PostDetailPage';
 import MapPage from './pages/MapPage';
 import GalleryPage from './pages/GalleryPage';
 import ContactPage from './pages/ContactPage';
+import AdminPage from './pages/AdminPage';
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/map" element={<AnimatedPage><MapPage /></AnimatedPage>} />
           <Route path="/gallery" element={<AnimatedPage><GalleryPage /></AnimatedPage>} />
           <Route path="/contact" element={<AnimatedPage><ContactPage /></AnimatedPage>} />
+          <Route path="/admin" element={<AnimatedPage><AdminPage /></AnimatedPage>} />
         </Routes>
       </AnimatePresence>
       {!isMapPage && <Footer />}
