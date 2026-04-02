@@ -1,5 +1,5 @@
-@use '../styles/variables' as *;
-@use '../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .page {
   height: 100vh;
@@ -14,7 +14,11 @@
   flex-shrink: 0;
 }
 
-.label { @include label-text; display: block; margin-bottom: $space-2; }
+.label {
+  @include label-text;
+  display: block;
+  margin-bottom: $space-2;
+}
 
 .title {
   @include display-heading;

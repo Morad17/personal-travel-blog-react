@@ -1,7 +1,7 @@
-import MapScene from '../components/map/MapScene';
-import CountrySidebar from '../components/map/CountrySidebar';
-import { MapProvider } from '../context/MapContext';
-import styles from './MapPage.module.scss';
+import MapScene from "../../components/map/MapScene";
+import CountrySidebar from "../../components/map/CountrySidebar";
+import { MapProvider } from "../../context/MapContext";
+import styles from "./MapPage.module.scss";
 
 export default function MapPage() {
   return (

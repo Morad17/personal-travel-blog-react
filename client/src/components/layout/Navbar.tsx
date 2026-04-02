@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import styles from './Navbar.module.scss';
+import { useState, useEffect } from "react";
+import { NavLink, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import styles from "./Navbar.module.scss";
 
 const navLinks = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/countries', label: 'Countries' },
-  { to: '/map', label: 'Map' },
-  { to: '/gallery', label: 'Gallery' },
-  { to: '/contact', label: 'Contact' },
+  { to: "/", label: "Home", end: true },
+  { to: "/countries", label: "Countries" },
+  { to: "/map", label: "Map" },
+  { to: "/gallery", label: "Gallery" },
+  // { to: '/contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -18,12 +18,12 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.inner}>
         <Link to="/" className={styles.logo}>
           <span className={styles.logoText}>Wanderer</span>
@@ -37,7 +37,7 @@ export default function Navbar() {
               to={link.to}
               end={link.end}
               className={({ isActive }) =>
-                `${styles.navLink} ${isActive ? styles.active : ''}`
+                `${styles.navLink} ${isActive ? styles.active : ""}`
               }
             >
               {link.label}
@@ -58,10 +58,10 @@ export default function Navbar() {
         {mobileOpen && (
           <motion.div
             className={styles.mobileMenu}
-            initial={{ opacity: 0, x: '100%' }}
+            initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: 'tween', duration: 0.3 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
           >
             <nav className={styles.mobileNav}>
               {navLinks.map((link, i) => (
@@ -75,7 +75,7 @@ export default function Navbar() {
                     to={link.to}
                     end={link.end}
                     className={({ isActive }) =>
-                      `${styles.mobileLink} ${isActive ? styles.active : ''}`
+                      `${styles.mobileLink} ${isActive ? styles.active : ""}`
                     }
                     onClick={() => setMobileOpen(false)}
                   >

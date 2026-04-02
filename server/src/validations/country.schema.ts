@@ -5,7 +5,7 @@ export const createCountrySchema = z.object({
   slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
   isoCode: z.string().length(2).toUpperCase(),
   flagEmoji: z.string().min(1),
-  visitedAt: z.string().datetime().optional(),
+  visitedAt: z.string().optional(),
   featured: z.coerce.boolean().optional(),
 });
 

@@ -1,5 +1,5 @@
-@use '../styles/variables' as *;
-@use '../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .page {
   padding-top: calc(#{$navbar-height} + #{$space-16});
@@ -17,14 +17,20 @@
   margin-bottom: $space-12;
 }
 
-.label { @include label-text; display: block; margin-bottom: $space-3; }
+.label {
+  @include label-text;
+  display: block;
+  margin-bottom: $space-3;
+}
 
 .title {
   @include display-heading;
   font-size: $text-5xl;
   margin-bottom: $space-4;
 
-  @include md { font-size: $text-6xl; }
+  @include md {
+    font-size: $text-6xl;
+  }
 }
 
 .subtitle {
@@ -38,17 +44,27 @@
   padding: $space-10;
 }
 
-.form { display: flex; flex-direction: column; gap: $space-6; }
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
 
 .row {
   display: grid;
   grid-template-columns: 1fr;
   gap: $space-6;
 
-  @include md { grid-template-columns: 1fr 1fr; }
+  @include md {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-.field { display: flex; flex-direction: column; gap: $space-2; }
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
 
 .label2 {
   font-size: $text-sm;
@@ -67,11 +83,19 @@
   transition: border-color $transition-base;
   @include focus-ring;
 
-  &::placeholder { color: $color-text-faint; }
-  &:focus { border-color: $color-accent; outline: none; }
+  &::placeholder {
+    color: $color-text-faint;
+  }
+  &:focus {
+    border-color: $color-accent;
+    outline: none;
+  }
 }
 
-.textarea { resize: vertical; min-height: 140px; }
+.textarea {
+  resize: vertical;
+  min-height: 140px;
+}
 
 .error {
   font-size: $text-xs;
@@ -91,16 +115,21 @@
   border-radius: $radius-md;
   font-size: $text-base;
   font-weight: 600;
-  transition: background $transition-base, transform $transition-fast;
+  transition:
+    background $transition-base,
+    transform $transition-fast;
   align-self: flex-start;
   @include focus-ring;
 
   &:hover:not(:disabled) {
-    background: darken(#F59E0B, 8%);
+    background: darken(#f59e0b, 8%);
     transform: translateY(-1px);
   }
 
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 .success {
@@ -114,7 +143,9 @@
     color: $color-text;
   }
 
-  p { color: $color-text-muted; }
+  p {
+    color: $color-text-muted;
+  }
 }
 
 .checkmark {
