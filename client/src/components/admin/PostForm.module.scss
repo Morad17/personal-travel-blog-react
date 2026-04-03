@@ -181,5 +181,5 @@
   font-weight: 600;
   @include focus-ring;
   &:disabled { opacity: 0.6; }
-  &:hover:not(:disabled) { background: darken(#F59E0B, 8%); }
+  &:hover:not(:disabled) { background: #d97706; }
 }

@@ -90,3 +90,5 @@ export default function Navbar() {
     </header>
   );
 }
+
+// Our next destination was Chiang Mai ,north west Thailand, famed for being the more chilled and relaxed side of Thailand. There are many activities available a half hour away from Chiang Mai. One of these is visiting the Elephant sanctuary. During the last few years there has been more attention on protecting Animals from human exploitation, and so more sanctuaries have become more ethical, by not allowing them to be ridden and caring for sick and injured Elephants. The sanctuary we visited was one of them, which was a massive complex that let Elephants roam the majority of the area freely. This was an amazing opportunity to get very close to the largest land animal in the world, whilst knowing you weren't contributing to inhumane practices. This area was full of jungles and rivers, one activity we took part in was a quad biking trip around the area, stopping to see elephants, villages, jungles and rivers, which I'd highly recommend.

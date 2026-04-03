@@ -98,5 +98,5 @@
   transition: background $transition-base;
   @include focus-ring;
 
-  &:hover { background: darken(#F59E0B, 8%); }
+  &:hover { background: #d97706; }
 }

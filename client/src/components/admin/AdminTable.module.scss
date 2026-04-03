@@ -20,7 +20,7 @@
   font-size: $text-sm;
   font-weight: 600;
   @include focus-ring;
-  &:hover { background: darken(#F59E0B, 8%); }
+  &:hover { background: #d97706; }
 }
 
 .table {

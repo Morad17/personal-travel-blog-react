@@ -43,7 +43,7 @@ export default function PostForm({ post, onClose }: Props) {
     extensions: [
       StarterKit,
       Image,
-      Link.configure({ openOnClick: false }),
+      Link.configure({ openOnClick: false, autolink: false }),
       Placeholder.configure({ placeholder: 'Write your story...' }),
     ],
     content: post?.content ?? '',

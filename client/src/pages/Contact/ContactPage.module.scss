@@ -122,7 +122,7 @@
   @include focus-ring;
 
   &:hover:not(:disabled) {
-    background: darken(#f59e0b, 8%);
+    background: #d97706;
     transform: translateY(-1px);
   }
 
