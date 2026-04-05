@@ -1,5 +1,5 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .hero {
   position: relative;
@@ -68,6 +68,14 @@
   gap: $space-6;
 }
 
+// Timeline + title in the same row — bottom-aligned so dots sit flush with title baseline
+.titleRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: $space-5;
+}
+
 // Big animated country name
 .countryTitle {
   font-family: $font-display;
@@ -99,7 +107,9 @@
   border-radius: $radius-md;
   font-weight: 600;
   font-size: $text-base;
-  transition: background $transition-base, transform $transition-fast;
+  transition:
+    background $transition-base,
+    transform $transition-fast;
   @include focus-ring;
 
   &:hover {
@@ -158,7 +168,10 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: background $transition-base, transform $transition-base, box-shadow $transition-base;
+  transition:
+    background $transition-base,
+    transform $transition-base,
+    box-shadow $transition-base;
   @include focus-ring;
 
   &:hover {
@@ -197,11 +210,11 @@
   bottom: 0;
   margin-block: auto;
   left: 0;
-  width: 280px;
-  height: clamp(240px, 52vh, 440px);
-  border-radius: $radius-xl;
+  width: 250px;
+  height: clamp(240px, 52vh, 360px);
+  border-radius: 5px;
   overflow: hidden;
-  box-shadow: $shadow-lg, 0 0 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
 }
 
 .portraitImg {
@@ -224,10 +237,16 @@
   @include focus-ring;
   z-index: $z-raised;
 
-  &:hover { color: $color-accent; }
+  &:hover {
+    color: $color-accent;
+  }
 }
 
 @keyframes fadeUp {
-  from { transform: translateX(-50%) translateY(0); }
-  to   { transform: translateX(-50%) translateY(-8px); }
+  from {
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    transform: translateX(-50%) translateY(-8px);
+  }
 }

@@ -24,18 +24,48 @@ interface SlideCountry {
 }
 
 const COUNTRIES: SlideCountry[] = [
-  { id: "indonesia", name: "Indonesia", tagline: "Temples & Rainforests", portrait: indonesiaPortrait, horizon: indonesiaHorizon },
-  { id: "malaysia",  name: "Malaysia",  tagline: "Jungles & City Lights",  portrait: malaysiaPortrait,  horizon: malaysiaHorizon  },
-  { id: "morocco",   name: "Morocco",   tagline: "Souks & Desert Sands",   portrait: moroccoPortrait,   horizon: moroccoHorizon   },
-  { id: "egypt",     name: "Egypt",     tagline: "Pharaohs & Nile Winds",  portrait: egyptPortrait,     horizon: egyptHorizon     },
-  { id: "japan",     name: "Japan",     tagline: "Shrines & Neon Streets", portrait: japanPortrait,     horizon: japanHorizon     },
+  {
+    id: "indonesia",
+    name: "Indonesia",
+    tagline: "Temples & Rainforests",
+    portrait: indonesiaPortrait,
+    horizon: indonesiaHorizon,
+  },
+  {
+    id: "malaysia",
+    name: "Malaysia",
+    tagline: "Jungles & City Lights",
+    portrait: malaysiaPortrait,
+    horizon: malaysiaHorizon,
+  },
+  {
+    id: "morocco",
+    name: "Morocco",
+    tagline: "Souks & Desert Sands",
+    portrait: moroccoPortrait,
+    horizon: moroccoHorizon,
+  },
+  {
+    id: "egypt",
+    name: "Egypt",
+    tagline: "Pharaohs & Nile Winds",
+    portrait: egyptPortrait,
+    horizon: egyptHorizon,
+  },
+  {
+    id: "japan",
+    name: "Japan",
+    tagline: "Shrines & Neon Streets",
+    portrait: japanPortrait,
+    horizon: japanHorizon,
+  },
 ];
 
 const N = COUNTRIES.length;
 
 // Card dimensions — also reflected in Hero.module.scss
 const CARD_WIDTH = 280;
-const CARD_GAP   = 16;
+const CARD_GAP = 16;
 const STEP = CARD_WIDTH + CARD_GAP;
 
 /**
@@ -46,21 +76,20 @@ const STEP = CARD_WIDTH + CARD_GAP;
  *   slot 2 = peeking from right
  *   slot 3 = off-screen RIGHT (next card waiting)
  */
-// 28px left offset so the active card has visible breathing room from the column edge.
 // rightCol width is set to 760px (2.5 cards + 2 gaps + 28px offset) to keep
 // slot 2 half-clipped at the right edge.
 const OFFSET = 28;
 const SLOT_X: Record<number, number> = {
-  4: -60,                    // subtle leftward drift while fading out
-  0: OFFSET,                 // first full card — 28px from left edge
-  1: STEP + OFFSET,          // second full card
-  2: STEP * 2 + OFFSET,      // peeking from right edge
-  3: STEP * 3 + OFFSET,      // off right — invisible, waiting
+  4: -60, // subtle leftward drift while fading out
+  0: OFFSET, // first full card — 28px from left edge
+  1: STEP + OFFSET, // second full card
+  2: STEP * 2 + OFFSET, // peeking from right edge
+  3: STEP * 3 + OFFSET, // off right — invisible, waiting
 };
 
 // Active card (slot 0) is slightly larger; others are pulled back
 const SLOT_SCALE: Record<number, number> = {
-  0: 1.07,
+  0: 1.2,
   1: 0.95,
   2: 0.92,
   3: 0.92,
@@ -103,22 +132,44 @@ export default function Hero() {
 
       {/* Two-column layout */}
       <div className={styles.layout}>
-
         {/* Left column */}
         <div className={styles.leftCol}>
-
-          <AnimatePresence mode="wait">
-            <motion.h1
-              key={activeCountry.id}
-              className={styles.countryTitle}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -24 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+          {/* Timeline + country title in the same row */}
+          <div className={styles.titleRow}>
+            {/* Dot nav — 5 dots on a vertical line */}
+            <motion.div
+              className={styles.dotNav}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
             >
-              {activeCountry.name}
-            </motion.h1>
-          </AnimatePresence>
+              <div className={styles.dotNavLine} />
+              {[...COUNTRIES].reverse().map((country, i) => {
+                const actualIndex = COUNTRIES.length - 1 - i;
+                return (
+                  <button
+                    key={country.id}
+                    className={`${styles.dot} ${actualIndex === activeIndex ? styles.dotActive : ""}`}
+                    onClick={() => setActiveIndex(actualIndex)}
+                    aria-label={`Go to ${country.name}`}
+                  />
+                );
+              })}
+            </motion.div>
+
+            <AnimatePresence mode="wait">
+              <motion.h1
+                key={activeCountry.id}
+                className={styles.countryTitle}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -24 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
+                {activeCountry.name}
+              </motion.h1>
+            </AnimatePresence>
+          </div>
 
           <motion.p
             className={styles.caption}
@@ -126,7 +177,8 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            follow my travel journeys from the moroccan desserts to the kl skyscrapers
+            follow my travel journeys from the moroccan desserts to the kl
+            skyscrapers
           </motion.p>
 
           <motion.div
@@ -142,25 +194,6 @@ export default function Hero() {
               View Map
             </Link>
           </motion.div>
-
-          {/* Dot nav — 5 dots on a vertical line */}
-          <motion.div
-            className={styles.dotNav}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-          >
-            <div className={styles.dotNavLine} />
-            {COUNTRIES.map((country, i) => (
-              <button
-                key={country.id}
-                className={`${styles.dot} ${i === activeIndex ? styles.dotActive : ""}`}
-                onClick={() => setActiveIndex(i)}
-                aria-label={`Go to ${country.name}`}
-              />
-            ))}
-          </motion.div>
-
         </div>
 
         {/* Right column — infinite card carousel */}
@@ -168,7 +201,7 @@ export default function Hero() {
           {COUNTRIES.map((country, i) => {
             // Circular slot: 0=active, 1=next, 2=peek, 3=off-right, 4=off-left
             const slot = (i - activeIndex + N) % N;
-            const x       = SLOT_X[slot];
+            const x = SLOT_X[slot];
             // Only slots 0-2 are visible; slots 3 & 4 are hidden off-screen
             // so the spring never drags a card through the visible area
             const opacity = slot <= 2 ? 1 : 0;
@@ -180,8 +213,12 @@ export default function Hero() {
                 initial={false}
                 animate={{ x, scale: SLOT_SCALE[slot], opacity }}
                 transition={{
-                  x:       { type: "tween", duration: 0.6, ease: [0.4, 0, 0.2, 1] },
-                  scale:   { type: "tween", duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                  x: { type: "tween", duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                  scale: {
+                    type: "tween",
+                    duration: 0.6,
+                    ease: [0.4, 0, 0.2, 1],
+                  },
                   opacity: { duration: 0.6, ease: "easeOut" },
                 }}
               >
@@ -194,7 +231,6 @@ export default function Hero() {
             );
           })}
         </div>
-
       </div>
 
       {/* Scroll indicator */}
