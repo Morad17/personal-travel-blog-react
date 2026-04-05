@@ -5,92 +5,91 @@
   position: relative;
   height: 100vh;
   min-height: 600px;
-  @include flex-center;
   overflow: hidden;
 }
+
+// ── Background ──────────────────────────────────────────────────────────────
 
 .bg {
   position: absolute;
   inset: 0;
   z-index: $z-below;
+  overflow: hidden;
+}
+
+.bgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .bgOverlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    135deg,
-    rgba(10, 10, 15, 0.85) 0%,
-    rgba(10, 10, 15, 0.5) 50%,
-    rgba(10, 10, 15, 0.7) 100%
+    to right,
+    rgba(10, 10, 15, 0.95) 0%,
+    rgba(10, 10, 15, 0.72) 42%,
+    rgba(10, 10, 15, 0.18) 100%
   );
   z-index: 1;
 }
 
-.bgPlaceholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    135deg,
-    #0f1923 0%,
-    #1a2535 30%,
-    #0d1b2a 60%,
-    #1a1a26 100%
-  );
+// ── Two-column layout ────────────────────────────────────────────────────────
 
-  // Replace with background-image when you have a hero photo
-  // background-image: url('...');
-  // background-size: cover;
-  // background-position: center;
-}
-
-.content {
+.layout {
   position: relative;
   z-index: $z-raised;
-  @include container;
-  text-align: center;
+  padding-left: 1.5rem;
+  padding-right: 0; // right column extends flush to viewport edge
+  display: grid;
+  // Fixed right column: 2.5 cards (280×2.5) + 2 gaps (16×2) + 28px left offset = 760px
+  // slot 0 starts 28px from the left edge, slot 2 is half-clipped at the right edge
+  grid-template-columns: 1fr 760px;
+  align-items: center;
+  min-height: 100vh;
   padding-top: $navbar-height;
 
-  @include lg { text-align: left; }
-}
-
-.eyebrow {
-  @include label-text;
-  display: block;
-  margin-bottom: $space-6;
-}
-
-.title {
-  @include display-heading;
-  font-size: clamp(3.5rem, 10vw, 8rem);
-  color: $color-text;
-  margin-bottom: $space-6;
-  line-height: 0.95;
-
-  em {
-    font-style: italic;
-    color: $color-accent;
+  @media (max-width: #{$bp-lg - 1px}) {
+    grid-template-columns: 1fr;
+    padding-inline: 1rem;
   }
 }
 
-.subtitle {
-  font-size: $text-lg;
+// ── Left column ──────────────────────────────────────────────────────────────
+
+.leftCol {
+  padding-block: $space-12;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+// Big animated country name
+.countryTitle {
+  font-family: $font-display;
+  font-size: clamp(3.2rem, 7vw, 6.5rem);
+  font-weight: 900;
+  color: $color-text;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.caption {
+  font-size: $text-sm;
   color: $color-text-muted;
-  max-width: 480px;
-  line-height: 1.7;
-  margin-bottom: $space-10;
-
-  @include lg { margin-left: 0; }
-
-  margin-inline: auto;
+  max-width: 380px;
+  line-height: 1.65;
+  font-style: italic;
 }
 
 .ctas {
   display: flex;
   gap: $space-4;
-  justify-content: center;
-
-  @include lg { justify-content: flex-start; }
 }
 
 .btnPrimary {
@@ -126,6 +125,94 @@
   }
 }
 
+// ── Dot navigation ───────────────────────────────────────────────────────────
+
+.dotNav {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-5;
+  width: 14px;
+  padding-block: 3px;
+}
+
+.dotNavLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: rgba(241, 245, 249, 0.14);
+  border-radius: $radius-full;
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+  background: rgba(241, 245, 249, 0.4);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background $transition-base, transform $transition-base, box-shadow $transition-base;
+  @include focus-ring;
+
+  &:hover {
+    background: rgba(241, 245, 249, 0.75);
+    transform: scale(1.3);
+  }
+}
+
+.dotActive {
+  background: $color-accent;
+  transform: scale(1.35);
+  box-shadow:
+    0 0 8px rgba(245, 158, 11, 0.65),
+    0 0 16px rgba(245, 158, 11, 0.3);
+}
+
+// ── Right column — infinite card carousel ────────────────────────────────────
+
+.rightCol {
+  position: relative;
+  height: 100vh;
+  // overflow: hidden clips cards waiting off-screen left/right
+  overflow: hidden;
+  padding-top: $navbar-height;
+
+  @media (max-width: #{$bp-lg - 1px}) {
+    display: none;
+  }
+}
+
+// CARD_WIDTH = 280px — must match CARD_WIDTH constant in Hero.tsx
+.portraitCard {
+  position: absolute;
+  // Vertical centering without transform (Framer Motion owns transform for x animation)
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+  left: 0;
+  width: 280px;
+  height: clamp(240px, 52vh, 440px);
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-lg, 0 0 40px rgba(0, 0, 0, 0.45);
+}
+
+.portraitImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+// ── Scroll indicator ─────────────────────────────────────────────────────────
+
 .scrollBtn {
   position: absolute;
   bottom: $space-8;
@@ -135,6 +222,7 @@
   animation: fadeUp 1s ease infinite alternate;
   transition: color $transition-base;
   @include focus-ring;
+  z-index: $z-raised;
 
   &:hover { color: $color-accent; }
 }
