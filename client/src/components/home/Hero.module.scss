@@ -29,70 +29,77 @@
 .bgOverlay {
   position: absolute;
   inset: 0;
+  // Darker left-heavy gradient so the bio panel text stays readable
   background: linear-gradient(
     to right,
-    rgba(10, 10, 15, 0.95) 0%,
-    rgba(10, 10, 15, 0.72) 42%,
-    rgba(10, 10, 15, 0.18) 100%
+    rgba(10, 10, 15, 0.97) 0%,
+    rgba(10, 10, 15, 0.95) 25%,
+    rgba(10, 10, 15, 0.85) 49%,
+    rgba(10, 10, 15, 0.25) 100%
   );
   z-index: 1;
 }
 
-// ── Two-column layout ────────────────────────────────────────────────────────
+// ── Main two-column layout ───────────────────────────────────────────────────
 
 .layout {
   position: relative;
   z-index: $z-raised;
-  padding-left: 1.5rem;
-  padding-right: 0; // right column extends flush to viewport edge
   display: grid;
-  // Fixed right column: 2.5 cards (280×2.5) + 2 gaps (16×2) + 28px left offset = 760px
-  // slot 0 starts 28px from the left edge, slot 2 is half-clipped at the right edge
-  grid-template-columns: 1fr 760px;
-  align-items: center;
-  min-height: 100vh;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
   padding-top: $navbar-height;
 
   @media (max-width: #{$bp-lg - 1px}) {
     grid-template-columns: 1fr;
-    padding-inline: 1rem;
   }
 }
 
-// ── Left column ──────────────────────────────────────────────────────────────
+// ── Left: bio panel ──────────────────────────────────────────────────────────
 
-.leftCol {
-  padding-block: $space-12;
+.bioPanel {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: $space-6;
+  padding: $space-10 $space-8;
 }
 
-// Timeline + title in the same row — bottom-aligned so dots sit flush with title baseline
-.titleRow {
+// Title + profile pic stacked, centered
+.bioHeader {
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  gap: $space-5;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-4;
 }
 
-// Big animated country name
-.countryTitle {
+.journalTitle {
   font-family: $font-display;
-  font-size: clamp(3.2rem, 7vw, 6.5rem);
-  font-weight: 900;
+  font-size: clamp(1.8rem, 4.5vw, 6rem);
+  font-weight: 800;
   color: $color-text;
-  line-height: 0.92;
+  line-height: 1;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
+  text-align: center;
 }
 
-.caption {
+.profilePic {
+  width: 128px;
+  height: 128px;
+  flex-shrink: 0;
+  border-radius: $radius-full;
+  object-fit: cover;
+  border: 2px solid $color-accent;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.bioText {
   font-size: $text-sm;
   color: $color-text-muted;
-  max-width: 380px;
-  line-height: 1.65;
-  font-style: italic;
+  line-height: 1.75;
+  max-width: 340px;
+  text-align: center;
 }
 
 .ctas {
@@ -101,12 +108,12 @@
 }
 
 .btnPrimary {
-  padding: $space-4 $space-8;
+  padding: $space-3 $space-6;
   background: $color-accent;
   color: #000;
   border-radius: $radius-md;
   font-weight: 600;
-  font-size: $text-base;
+  font-size: $text-sm;
   transition:
     background $transition-base,
     transform $transition-fast;
@@ -119,13 +126,13 @@
 }
 
 .btnSecondary {
-  padding: $space-4 $space-8;
+  padding: $space-3 $space-6;
   background: transparent;
   color: $color-text;
   border: 1px solid rgba(241, 245, 249, 0.3);
   border-radius: $radius-md;
   font-weight: 500;
-  font-size: $text-base;
+  font-size: $text-sm;
   transition: all $transition-base;
   @include focus-ring;
 
@@ -135,16 +142,54 @@
   }
 }
 
-// ── Dot navigation ───────────────────────────────────────────────────────────
+// ── Right: country title + carousel ─────────────────────────────────────────
 
-.dotNav {
-  position: relative;
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  // Nudge everything slightly above center
+  padding-bottom: 12vh;
+  gap: $space-4;
+  overflow: hidden;
+
+  @media (max-width: #{$bp-lg - 1px}) {
+    display: none;
+  }
+}
+
+// Country title below the cards
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  padding-left: $space-6;
+}
+
+.countryTitle {
+  font-family: $font-display;
+  font-size: clamp(3.2rem, 5.5vw, 6rem);
+  font-weight: 900;
+  color: $color-text;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+// ── Centre timeline — absolutely positioned between the two columns ───────────
+
+.centreTimeline {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 600px;
+  width: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $space-5;
-  width: 14px;
-  padding-block: 3px;
+  justify-content: space-between;
+  padding-block: 4px;
+  z-index: $z-raised + 1;
 }
 
 .dotNavLine {
@@ -188,24 +233,18 @@
     0 0 16px rgba(245, 158, 11, 0.3);
 }
 
-// ── Right column — infinite card carousel ────────────────────────────────────
+// ── Portrait card carousel ───────────────────────────────────────────────────
 
-.rightCol {
+// cardCol is the clipping container; cards are absolute inside it
+.cardCol {
   position: relative;
-  height: 100vh;
-  // overflow: hidden clips cards waiting off-screen left/right
+  height: clamp(260px, 56vh, 480px);
   overflow: hidden;
-  padding-top: $navbar-height;
-
-  @media (max-width: #{$bp-lg - 1px}) {
-    display: none;
-  }
 }
 
-// CARD_WIDTH = 280px — must match CARD_WIDTH constant in Hero.tsx
+// CARD_WIDTH = 280px — must match Hero.tsx
 .portraitCard {
   position: absolute;
-  // Vertical centering without transform (Framer Motion owns transform for x animation)
   top: 0;
   bottom: 0;
   margin-block: auto;
@@ -228,7 +267,7 @@
 
 .scrollBtn {
   position: absolute;
-  bottom: $space-8;
+  bottom: $space-6;
   left: 50%;
   transform: translateX(-50%);
   color: $color-text-muted;
