@@ -26,7 +26,7 @@ export default function Navbar() {
     <header className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.inner}>
         <Link to="/" className={styles.logo}>
-          <span className={styles.logoText}>Wanderer</span>
+          <span className={styles.logoText}>Morad's Journal</span>
           <span className={styles.logoDot}>.</span>
         </Link>
 

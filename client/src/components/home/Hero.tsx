@@ -25,18 +25,48 @@ interface SlideCountry {
 }
 
 const COUNTRIES: SlideCountry[] = [
-  { id: "indonesia", name: "Indonesia", tagline: "Temples & Rainforests", portrait: indonesiaPortrait, horizon: indonesiaHorizon },
-  { id: "malaysia",  name: "Malaysia",  tagline: "Jungles & City Lights",  portrait: malaysiaPortrait,  horizon: malaysiaHorizon  },
-  { id: "morocco",   name: "Morocco",   tagline: "Souks & Desert Sands",   portrait: moroccoPortrait,   horizon: moroccoHorizon   },
-  { id: "egypt",     name: "Egypt",     tagline: "Pharaohs & Nile Winds",  portrait: egyptPortrait,     horizon: egyptHorizon     },
-  { id: "japan",     name: "Japan",     tagline: "Shrines & Neon Streets", portrait: japanPortrait,     horizon: japanHorizon     },
+  {
+    id: "indonesia",
+    name: "Indonesia",
+    tagline: "Temples & Rainforests",
+    portrait: indonesiaPortrait,
+    horizon: indonesiaHorizon,
+  },
+  {
+    id: "malaysia",
+    name: "Malaysia",
+    tagline: "Jungles & City Lights",
+    portrait: malaysiaPortrait,
+    horizon: malaysiaHorizon,
+  },
+  {
+    id: "morocco",
+    name: "Morocco",
+    tagline: "Souks & Desert Sands",
+    portrait: moroccoPortrait,
+    horizon: moroccoHorizon,
+  },
+  {
+    id: "egypt",
+    name: "Egypt",
+    tagline: "Pharaohs & Nile Winds",
+    portrait: egyptPortrait,
+    horizon: egyptHorizon,
+  },
+  {
+    id: "japan",
+    name: "Japan",
+    tagline: "Shrines & Neon Streets",
+    portrait: japanPortrait,
+    horizon: japanHorizon,
+  },
 ];
 
 const N = COUNTRIES.length;
 
 const CARD_WIDTH = 280;
-const CARD_GAP   = 16;
-const STEP       = CARD_WIDTH + CARD_GAP;
+const CARD_GAP = 16;
+const STEP = CARD_WIDTH + CARD_GAP;
 
 const OFFSET = 28;
 const SLOT_X: Record<number, number> = {
@@ -72,7 +102,6 @@ export default function Hero() {
 
   return (
     <section className={styles.hero}>
-
       {/* Full-bleed background */}
       <div className={styles.bg} data-scroll data-scroll-speed="-0.3">
         <AnimatePresence>
@@ -92,7 +121,6 @@ export default function Hero() {
 
       {/* ── Main layout: left bio panel | right slideshow ── */}
       <div className={styles.layout}>
-
         {/* ── LEFT: country title + journal info ── */}
         <motion.div
           className={styles.bioPanel}
@@ -102,21 +130,29 @@ export default function Hero() {
         >
           {/* Journal title + profile pic */}
           <div className={styles.bioHeader}>
-            <h2 className={styles.journalTitle}>Morad's Journal</h2>
-            <img src={profilePic} alt="Morad" className={styles.profilePic} />
+            <h2 className={styles.journalTitle}>Morad's</h2>
+            <div className={styles.journalTitleGroup}>
+              <img src={profilePic} alt="Morad" className={styles.profilePic} />{" "}
+              <h2 className={styles.journalTitle}>Journal</h2>
+            </div>
           </div>
 
           {/* Bio text */}
           <p className={styles.bioText}>
-            A passionate traveller and photographer documenting the world one
-            country at a time. From the medinas of Morocco to the temples of
-            Japan — chasing light, culture, and the stories between.
+            A passionate traveller looking for the next adventure. From the
+            cenotes of Mexico to the temples of Japan — chasing culture, and the
+            spontaneous stories.Writing and picturing my journies so far, feel
+            free to grab some inspiration and wonderlust...
           </p>
 
           {/* CTAs */}
           <div className={styles.ctas}>
-            <Link to="/countries" className={styles.btnPrimary}>Read Stories</Link>
-            <Link to="/map" className={styles.btnSecondary}>View Map</Link>
+            <Link to="/countries" className={styles.btnPrimary}>
+              Read Stories
+            </Link>
+            <Link to="/map" className={styles.btnSecondary}>
+              View Map
+            </Link>
           </div>
         </motion.div>
 
@@ -124,8 +160,8 @@ export default function Hero() {
         <div className={styles.rightPanel}>
           <div className={styles.cardCol}>
             {COUNTRIES.map((country, i) => {
-              const slot    = (i - activeIndex + N) % N;
-              const x       = SLOT_X[slot];
+              const slot = (i - activeIndex + N) % N;
+              const x = SLOT_X[slot];
               const opacity = slot <= 2 ? 1 : 0;
 
               return (
@@ -135,12 +171,20 @@ export default function Hero() {
                   initial={false}
                   animate={{ x, scale: SLOT_SCALE[slot], opacity }}
                   transition={{
-                    x:       { type: "tween", duration: 0.6, ease: [0.4, 0, 0.2, 1] },
-                    scale:   { type: "tween", duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                    x: { type: "tween", duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                    scale: {
+                      type: "tween",
+                      duration: 0.6,
+                      ease: [0.4, 0, 0.2, 1],
+                    },
                     opacity: { duration: 0.6, ease: "easeOut" },
                   }}
                 >
-                  <img src={country.portrait} alt={country.name} className={styles.portraitImg} />
+                  <img
+                    src={country.portrait}
+                    alt={country.name}
+                    className={styles.portraitImg}
+                  />
                 </motion.div>
               );
             })}
@@ -183,7 +227,6 @@ export default function Hero() {
             );
           })}
         </motion.div>
-
       </div>
 
       {/* Scroll indicator */}
@@ -197,7 +240,6 @@ export default function Hero() {
       >
         <ChevronDown size={24} />
       </motion.button>
-
     </section>
   );
 }

@@ -81,7 +81,11 @@
   color: $color-text;
   line-height: 1;
   letter-spacing: -0.02em;
-  text-align: center;
+  width: 100%;
+}
+.journalTitleGroup {
+  display: flex;
+  gap: 20px;
 }
 
 .profilePic {
@@ -98,7 +102,7 @@
   font-size: $text-sm;
   color: $color-text-muted;
   line-height: 1.75;
-  max-width: 340px;
+  max-width: 450px;
   text-align: center;
 }
 
