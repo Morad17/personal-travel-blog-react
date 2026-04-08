@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import {
+  ChevronDown,
+  BookOpen,
+  Map as MapIcon,
+  Images,
+  Globe,
+} from "lucide-react";
+import { FaGlobeAfrica } from "react-icons/fa";
+import { FaMapLocationDot, FaBookAtlas } from "react-icons/fa6";
+import { IoImagesSharp } from "react-icons/io5";
 import styles from "./Hero.module.scss";
 
 import indonesiaPortrait from "../../assets/images/slideshow/indonesia-portrait.jpg";
@@ -85,6 +94,25 @@ const SLOT_SCALE: Record<number, number> = {
   4: 0.95,
 };
 
+const moradVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.3 } },
+};
+
+const journalVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.7 } },
+};
+
+const letterVariants = {
+  hidden: { opacity: 0, x: -22 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
+  },
+};
+
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeCountry = COUNTRIES[activeIndex];
@@ -124,16 +152,46 @@ export default function Hero() {
         {/* ── LEFT: country title + journal info ── */}
         <motion.div
           className={styles.bioPanel}
-          initial={{ opacity: 0, x: -24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           {/* Journal title + profile pic */}
           <div className={styles.bioHeader}>
-            <h2 className={styles.journalTitle}>Morad's</h2>
+            <motion.h2
+              className={styles.journalTitle}
+              variants={moradVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {"Morad's".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  variants={letterVariants}
+                  style={{ display: "inline-block" }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.h2>
             <div className={styles.journalTitleGroup}>
-              <img src={profilePic} alt="Morad" className={styles.profilePic} />{" "}
-              <h2 className={styles.journalTitle}>Journal</h2>
+              <img src={profilePic} alt="Morad" className={styles.profilePic} />
+              <motion.h2
+                className={styles.journalTitle}
+                variants={journalVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                {"Journal".split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    variants={letterVariants}
+                    style={{ display: "inline-block" }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </motion.h2>
             </div>
           </div>
 
@@ -144,14 +202,26 @@ export default function Hero() {
             spontaneous stories.Writing and picturing my journies so far, feel
             free to grab some inspiration and wonderlust...
           </p>
-
+          <div className="">
+            <h3>Explore:</h3>
+          </div>
           {/* CTAs */}
-          <div className={styles.ctas}>
-            <Link to="/countries" className={styles.btnPrimary}>
-              Read Stories
+          <div className={styles.iconButtons}>
+            <Link to="/blog" className={styles.iconBtn}>
+              <span className={styles.iconBtnLabel}>Blog</span>
+              <FaBookAtlas size={30} />
             </Link>
-            <Link to="/map" className={styles.btnSecondary}>
-              View Map
+            <Link to="/map" className={styles.iconBtn}>
+              <span className={styles.iconBtnLabel}>Map</span>
+              <FaGlobeAfrica size={30} />
+            </Link>
+            <Link to="/gallery" className={styles.iconBtn}>
+              <span className={styles.iconBtnLabel}>Gallery</span>
+              <IoImagesSharp size={30} />
+            </Link>
+            <Link to="/countries" className={styles.iconBtn}>
+              <span className={styles.iconBtnLabel}>Countries</span>
+              <FaMapLocationDot size={30} />
             </Link>
           </div>
         </motion.div>

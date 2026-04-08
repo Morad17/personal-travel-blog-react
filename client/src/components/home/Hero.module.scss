@@ -86,6 +86,7 @@
 .journalTitleGroup {
   display: flex;
   gap: 20px;
+  position: relative;
 }
 
 .profilePic {
@@ -96,6 +97,8 @@
   object-fit: cover;
   border: 2px solid $color-accent;
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  position: relative;
+  z-index: 2;
 }
 
 .bioText {
@@ -106,44 +109,54 @@
   text-align: center;
 }
 
-.ctas {
+.iconButtons {
   display: flex;
-  gap: $space-4;
+  gap: $space-6;
 }
 
-.btnPrimary {
-  padding: $space-3 $space-6;
-  background: $color-accent;
-  color: #000;
-  border-radius: $radius-md;
-  font-weight: 600;
-  font-size: $text-sm;
-  transition:
-    background $transition-base,
-    transform $transition-fast;
-  @include focus-ring;
-
-  &:hover {
-    background: #d97706;
-    transform: translateY(-2px);
-  }
-}
-
-.btnSecondary {
-  padding: $space-3 $space-6;
-  background: transparent;
+.iconBtn {
+  display: flex;
+  align-items: center;
+  gap: 0;
   color: $color-text;
-  border: 1px solid rgba(241, 245, 249, 0.3);
-  border-radius: $radius-md;
-  font-weight: 500;
-  font-size: $text-sm;
-  transition: all $transition-base;
+  transition: color $transition-base;
   @include focus-ring;
+  border: 1px solid #ffffff3d;
+  padding: 5px;
+  border-radius: 5px;
+
+  svg {
+    flex-shrink: 0;
+    transition: color $transition-base;
+  }
 
   &:hover {
-    border-color: $color-text;
-    background: rgba(241, 245, 249, 0.05);
+    color: $color-accent;
+
+    .iconBtnLabel {
+      max-width: 80px;
+      opacity: 1;
+      transform: translateX(0);
+      margin-right: $space-2;
+    }
+    border: 1px solid #f59f0b31;
   }
+}
+
+.iconBtnLabel {
+  display: block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: $text-sm;
+  font-weight: 500;
+  transform: translateX(-6px);
+  transition:
+    max-width 0.25s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    margin-right 0.25s ease;
 }
 
 // ── Right: country title + carousel ─────────────────────────────────────────
