@@ -7,6 +7,27 @@ import MapScene from "../map/MapScene";
 import { MapProvider } from "../../context/MapContext";
 import styles from "./FeaturedPlaces.module.scss";
 
+const fadeUp = (delay = 0, duration = 0.7) => ({
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: false, margin: "-80px" },
+  transition: { duration, delay, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
+});
+
+const fadeLeft = (delay = 0, duration = 0.8) => ({
+  initial: { opacity: 0, x: -40 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: false, margin: "-80px" },
+  transition: { duration, delay, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
+});
+
+const fadeRight = (delay = 0, duration = 0.8) => ({
+  initial: { opacity: 0, x: 40 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: false, margin: "-80px" },
+  transition: { duration, delay, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
+});
+
 export default function FeaturedPlaces() {
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts", "featured"],
@@ -15,23 +36,26 @@ export default function FeaturedPlaces() {
 
   return (
     <section className={styles.section}>
-      {/* Full-width header */}
-      <motion.header
-        className={styles.header}
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-      >
-        <span className={styles.label}>Featured</span>
-        <h2 className={styles.title}>Recent Adventures</h2>
+      {/* Full-width header — label drops in first, title slightly after */}
+      <motion.header className={styles.header} {...fadeUp(0, 0.6)}>
+        <motion.span
+          className={styles.label}
+          {...fadeUp(0.1, 0.5)}
+        >
+          Featured
+        </motion.span>
+        <motion.h2 className={styles.title} {...fadeUp(0.2, 0.7)}>
+          Recent Adventures
+        </motion.h2>
       </motion.header>
 
       <div className={styles.body}>
-        {/* Left — static map */}
+        {/* Left — map slides in from left */}
         <div className={styles.mapCol}>
-          <span className={styles.mapCaption}>Countries visited so far</span>
-          <div className={styles.mapInner}>
+          <motion.span className={styles.mapCaption} {...fadeLeft(0.1, 0.6)}>
+            Countries visited so far
+          </motion.span>
+          <motion.div className={styles.mapInner} {...fadeLeft(0.25, 0.9)}>
             <MapProvider>
               <MapScene
                 isStatic
@@ -47,15 +71,19 @@ export default function FeaturedPlaces() {
                 }}
               />
             </MapProvider>
-          </div>
-          <Link to="/map" className={styles.ctaLink}>
-            View Full Map →
-          </Link>
+          </motion.div>
+          <motion.div {...fadeUp(0.5, 0.5)}>
+            <Link to="/map" className={styles.ctaLink}>
+              View Full Map →
+            </Link>
+          </motion.div>
         </div>
 
-        {/* Right — blog posts */}
+        {/* Right — subtitle + cards slide in from right, staggered */}
         <div className={styles.postsCol}>
-          <p className={styles.subtitle}>The latest stories from the road</p>
+          <motion.p className={styles.subtitle} {...fadeRight(0.15, 0.6)}>
+            The latest stories from the road
+          </motion.p>
           <div className={styles.grid}>
             {isLoading
               ? Array.from({ length: 4 }).map((_, i) => (
@@ -64,10 +92,14 @@ export default function FeaturedPlaces() {
               : posts?.map((post, i) => (
                   <motion.div
                     key={post.id}
-                    initial={{ opacity: 0, y: 32 }}
+                    initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1, duration: 0.6 }}
+                    viewport={{ once: false, margin: "-60px" }}
+                    transition={{
+                      delay: i * 0.12,
+                      duration: 0.65,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
                   >
                     <PostCard post={post} />
                   </motion.div>
@@ -76,10 +108,7 @@ export default function FeaturedPlaces() {
 
           <motion.div
             className={styles.cta}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+            {...fadeUp(0.3, 0.5)}
           >
             <Link to="/blogs" className={styles.ctaLink}>
               View All Stories →
