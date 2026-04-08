@@ -1,28 +1,30 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { postsService } from '../services/postsService';
-import { countriesService } from '../services/countriesService';
-import PostCard from '../components/blog/PostCard';
-import styles from './CountriesPage.module.scss';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { postsService } from "../../services/postsService";
+import { countriesService } from "../../services/countriesService";
+import PostCard from "../../components/blog/PostCard";
+import styles from "./CountriesPage.module.scss";
 
 export default function CountriesPage() {
-  const [countryFilter, setCountryFilter] = useState('');
-  const [search, setSearch] = useState('');
+  const [countryFilter, setCountryFilter] = useState("");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
   const { data: countriesList } = useQuery({
-    queryKey: ['countries'],
+    queryKey: ["countries"],
     queryFn: () => countriesService.getAll().then((r) => r.data),
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['posts', { country: countryFilter, page }],
+    queryKey: ["posts", { country: countryFilter, page }],
     queryFn: () =>
-      postsService.getAll({ country: countryFilter || undefined, page, limit: 9 }).then((r) => r.data),
+      postsService
+        .getAll({ country: countryFilter || undefined, page, limit: 9 })
+        .then((r) => r.data),
   });
 
   const filtered = data?.posts?.filter((p) =>
-    search ? p.title.toLowerCase().includes(search.toLowerCase()) : true
+    search ? p.title.toLowerCase().includes(search.toLowerCase()) : true,
   );
 
   return (
@@ -31,7 +33,9 @@ export default function CountriesPage() {
         <header className={styles.header}>
           <span className={styles.label}>Explore</span>
           <h1 className={styles.title}>Travel Stories</h1>
-          <p className={styles.subtitle}>Adventures, encounters and moments from around the world</p>
+          <p className={styles.subtitle}>
+            Adventures, encounters and moments from around the world
+          </p>
         </header>
 
         <div className={styles.filters}>
@@ -44,12 +48,17 @@ export default function CountriesPage() {
           />
           <select
             value={countryFilter}
-            onChange={(e) => { setCountryFilter(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setCountryFilter(e.target.value);
+              setPage(1);
+            }}
             className={styles.select}
           >
             <option value="">All Countries</option>
             {countriesList?.map((c) => (
-              <option key={c.id} value={c.slug}>{c.flagEmoji} {c.name}</option>
+              <option key={c.id} value={c.slug}>
+                {c.flagEmoji} {c.name}
+              </option>
             ))}
           </select>
         </div>

@@ -109,7 +109,10 @@ const letterVariants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
+    transition: {
+      duration: 0.55,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
   },
 };
 
@@ -147,7 +150,6 @@ export default function Hero() {
         <div className={styles.bgOverlay} />
       </div>
 
-      {/* ── Main layout: left bio panel | right slideshow ── */}
       <div className={styles.layout}>
         {/* ── LEFT: country title + journal info ── */}
         <motion.div
@@ -208,20 +210,16 @@ export default function Hero() {
           {/* CTAs */}
           <div className={styles.iconButtons}>
             <Link to="/blog" className={styles.iconBtn}>
-              <span className={styles.iconBtnLabel}>Blog</span>
               <FaBookAtlas size={30} />
+              <span className={styles.iconBtnLabel}>Blog</span>
             </Link>
             <Link to="/map" className={styles.iconBtn}>
-              <span className={styles.iconBtnLabel}>Map</span>
               <FaGlobeAfrica size={30} />
+              <span className={styles.iconBtnLabel}>Map</span>
             </Link>
             <Link to="/gallery" className={styles.iconBtn}>
-              <span className={styles.iconBtnLabel}>Gallery</span>
               <IoImagesSharp size={30} />
-            </Link>
-            <Link to="/countries" className={styles.iconBtn}>
-              <span className={styles.iconBtnLabel}>Countries</span>
-              <FaMapLocationDot size={30} />
+              <span className={styles.iconBtnLabel}>Gallery</span>
             </Link>
           </div>
         </motion.div>

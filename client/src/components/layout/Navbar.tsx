@@ -6,7 +6,7 @@ import styles from "./Navbar.module.scss";
 
 const navLinks = [
   { to: "/", label: "Home", end: true },
-  { to: "/countries", label: "Countries" },
+  { to: "/blogs", label: "Blogs" },
   { to: "/map", label: "Map" },
   { to: "/gallery", label: "Gallery" },
   // { to: '/contact', label: 'Contact' },

@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import HomePage from "./pages/Home/HomePage";
-import CountriesPage from "./pages/CountriesPage";
-import CountryDetailPage from "./pages/CountryDetailPage";
+import CountriesPage from "./pages/Blogs/CountriesPage";
+import CountryDetailPage from "./pages/Blogs/CountryDetailPage";
 import PostDetailPage from "./pages/PostDetail/PostDetailPage";
 import MapPage from "./pages/Map/MapPage";
 import GalleryPage from "./pages/Gallery/GalleryPage";
@@ -48,7 +48,7 @@ export default function App() {
             }
           />
           <Route
-            path="/countries"
+            path="/blogs"
             element={
               <AnimatedPage>
                 <CountriesPage />

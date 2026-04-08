@@ -1,15 +1,15 @@
-import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { countriesService } from '../services/countriesService';
-import PostCard from '../components/blog/PostCard';
-import { formatDateShort } from '../utils/formatDate';
-import styles from './CountryDetailPage.module.scss';
+import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { countriesService } from "../../services/countriesService";
+import PostCard from "../../components/blog/PostCard";
+import { formatDateShort } from "../../utils/formatDate";
+import styles from "./CountryDetailPage.module.scss";
 
 export default function CountryDetailPage() {
   const { slug } = useParams<{ slug: string }>();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['country', slug],
+    queryKey: ["country", slug],
     queryFn: () => countriesService.getBySlug(slug!).then((r) => r.data),
     enabled: !!slug,
   });
@@ -28,27 +28,35 @@ export default function CountryDetailPage() {
     <main className={styles.page}>
       <div className={styles.hero}>
         {data.coverImageUrl && (
-          <img src={data.coverImageUrl} alt={data.name} className={styles.heroImage} />
+          <img
+            src={data.coverImageUrl}
+            alt={data.name}
+            className={styles.heroImage}
+          />
         )}
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <span className={styles.flag}>{data.flagEmoji}</span>
           <h1 className={styles.name}>{data.name}</h1>
           {data.visitedAt && (
-            <p className={styles.visited}>Visited {formatDateShort(data.visitedAt)}</p>
+            <p className={styles.visited}>
+              Visited {formatDateShort(data.visitedAt)}
+            </p>
           )}
         </div>
       </div>
 
       <div className={styles.container}>
         <div className={styles.breadcrumb}>
-          <Link to="/countries" className={styles.breadcrumbLink}>Countries</Link>
+          <Link to="/blogs" className={styles.breadcrumbLink}>
+            Countries
+          </Link>
           <span className={styles.sep}>›</span>
           <span>{data.name}</span>
         </div>
 
         <h2 className={styles.sectionTitle}>
-          {data.posts.length} {data.posts.length === 1 ? 'Story' : 'Stories'}
+          {data.posts.length} {data.posts.length === 1 ? "Story" : "Stories"}
         </h2>
 
         {data.posts.length > 0 ? (

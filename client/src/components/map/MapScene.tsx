@@ -35,16 +35,23 @@ interface HoverInfo {
   object?: { properties: GeoProps };
 }
 
-export default function MapScene() {
+interface MapSceneProps {
+  isStatic?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialViewState?: any;
+}
+
+export default function MapScene({ isStatic = false, initialViewState }: MapSceneProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [geoData, setGeoData] = useState<any>(null);
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [viewState, setViewState] = useState<any>(INITIAL_VIEW_STATE);
+  const [viewState, setViewState] = useState<any>(initialViewState ?? INITIAL_VIEW_STATE);
   const { setSelectedCountry } = useMapContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isStatic) return;
     const el = containerRef.current;
     if (!el) return;
     const prevent = (e: Event) => e.preventDefault();
@@ -54,7 +61,7 @@ export default function MapScene() {
       el.removeEventListener("wheel", prevent);
       el.removeEventListener("touchmove", prevent);
     };
-  }, []);
+  }, [isStatic]);
 
   const { data: visitedCountries } = useQuery({
     queryKey: ["map-visited"],
@@ -124,7 +131,7 @@ export default function MapScene() {
           const v = vs as any;
           setViewState({ ...v, latitude: Math.min(v.latitude, 20), pitch: 30 });
         }}
-        controller={true}
+        controller={!isStatic}
         layers={layer ? [layer] : []}
       >
         <MapGL mapStyle={MAP_STYLE} />

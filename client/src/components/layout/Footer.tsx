@@ -17,7 +17,7 @@ export default function Footer() {
         </div>
 
         <nav className={styles.links}>
-          <Link to="/countries">Countries</Link>
+          <Link to="/blogs">Blogs</Link>
           <Link to="/map">Map</Link>
           <Link to="/gallery">Gallery</Link>
           {/* <Link to="/contact">Contact</Link> */}

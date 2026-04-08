@@ -1,7 +1,9 @@
-@use '../styles/variables' as *;
-@use '../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
-.page { min-height: 100vh; }
+.page {
+  min-height: 100vh;
+}
 
 .hero {
   position: relative;
@@ -32,14 +34,20 @@
   padding-top: $navbar-height;
 }
 
-.flag { font-size: 4rem; display: block; margin-bottom: $space-4; }
+.flag {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: $space-4;
+}
 
 .name {
   @include display-heading;
   font-size: $text-5xl;
   margin-bottom: $space-3;
 
-  @include md { font-size: $text-6xl; }
+  @include md {
+    font-size: $text-6xl;
+  }
 }
 
 .visited {
@@ -65,10 +73,14 @@
 .breadcrumbLink {
   color: $color-accent;
   transition: opacity $transition-base;
-  &:hover { opacity: 0.7; }
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
-.sep { color: $color-text-faint; }
+.sep {
+  color: $color-text-faint;
+}
 
 .sectionTitle {
   font-family: $font-display;
@@ -81,8 +93,12 @@
   grid-template-columns: 1fr;
   gap: $space-8;
 
-  @include md { grid-template-columns: repeat(2, 1fr); }
-  @include lg { grid-template-columns: repeat(3, 1fr); }
+  @include md {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include lg {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .empty {
@@ -92,7 +108,9 @@
   padding: $space-16 0;
 }
 
-.loading { padding-top: $navbar-height; }
+.loading {
+  padding-top: $navbar-height;
+}
 
 .skeletonHero {
   height: 50vh;
