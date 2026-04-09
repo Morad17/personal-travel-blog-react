@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { countriesService } from "../../services/countriesService";
 import PostCard from "../../components/blog/PostCard";
-import { formatDateShort } from "../../utils/formatDate";
+import { formatDateUK } from "../../utils/formatDate";
 import styles from "./CountryDetailPage.module.scss";
 
 export default function CountryDetailPage() {
@@ -38,10 +38,15 @@ export default function CountryDetailPage() {
         <div className={styles.heroContent}>
           <span className={styles.flag}>{data.flagEmoji}</span>
           <h1 className={styles.name}>{data.name}</h1>
-          {data.visitedAt && (
-            <p className={styles.visited}>
-              Visited {formatDateShort(data.visitedAt)}
-            </p>
+          {data.visits?.length > 0 && (
+            <ul className={styles.visitsList}>
+              {data.visits.map((v) => (
+                <li key={v.id}>
+                  <strong>{formatDateUK(v.date)}</strong>
+                  {v.cities.length > 0 && ` — ${v.cities.join(", ")}`}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>

@@ -48,6 +48,52 @@
   input { accent-color: $color-accent; }
 }
 
+.visitsSection {
+  margin-bottom: $space-4;
+}
+
+.visitsLabel {
+  display: block;
+  font-size: $text-sm;
+  color: $color-text-muted;
+  margin-bottom: $space-2;
+}
+
+.visitRow {
+  display: grid;
+  grid-template-columns: 160px 1fr auto;
+  gap: $space-3;
+  margin-bottom: $space-3;
+  align-items: center;
+
+  // Let CreatableSelect fill its column properly
+  > div:nth-child(2) {
+    min-width: 0;
+  }
+}
+
+.removeVisit {
+  width: 28px;
+  height: 28px;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  color: $color-text-muted;
+  font-size: $text-lg;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  &:hover { color: #ef4444; border-color: #ef4444; }
+}
+
+.addVisit {
+  font-size: $text-sm;
+  color: $color-accent;
+  padding: $space-1 0;
+  &:hover { opacity: 0.8; }
+}
+
 .file { color: $color-text-muted; font-size: $text-sm; margin-bottom: $space-4; display: block; }
 
 .actions {

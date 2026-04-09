@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { postsService } from "../../services/postsService";
 import PostCard from "../blog/PostCard";
-import MapScene from "../map/MapScene";
-import { MapProvider } from "../../context/MapContext";
+import GlobeScene from "./GlobeScene";
 import styles from "./FeaturedPlaces.module.scss";
 
 const fadeUp = (delay = 0, duration = 0.7) => ({
@@ -56,21 +55,7 @@ export default function FeaturedPlaces() {
             Countries visited so far
           </motion.span>
           <motion.div className={styles.mapInner} {...fadeLeft(0.25, 0.9)}>
-            <MapProvider>
-              <MapScene
-                isStatic
-                initialViewState={{
-                  longitude: 15,
-                  latitude: 10,
-                  zoom: 0.95,
-                  minZoom: 0.95,
-                  pitch: 30,
-                  minPitch: 30,
-                  maxPitch: 30,
-                  bearing: 0,
-                }}
-              />
-            </MapProvider>
+            <GlobeScene />
           </motion.div>
           <motion.div {...fadeUp(0.5, 0.5)}>
             <Link to="/map" className={styles.ctaLink}>

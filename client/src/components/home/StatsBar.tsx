@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion, useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { countriesService } from '../../services/countriesService';
+import { galleryService } from '../../services/galleryService';
 import styles from './StatsBar.module.scss';
 
 function AnimatedCount({ target }: { target: number }) {
@@ -31,13 +32,19 @@ export default function StatsBar() {
     queryFn: () => countriesService.getAll().then((r) => r.data),
   });
 
+  const { data: galleryData } = useQuery({
+    queryKey: ['gallery-count'],
+    queryFn: () => galleryService.getAll({ limit: 1, type: 'image' }).then((r) => r.data),
+  });
+
   const totalPosts = countries?.reduce((sum, c) => sum + (c._count?.posts ?? 0), 0) ?? 0;
   const countriesCount = countries?.length ?? 0;
+  const photoCount = galleryData?.total ?? 0;
 
   const stats = [
     { value: countriesCount, label: 'Countries', suffix: '' },
     { value: totalPosts, label: 'Stories', suffix: '' },
-    { value: 0, label: 'Photos', suffix: '+' },
+    { value: photoCount, label: 'Photos', suffix: '+' },
   ];
 
   return (

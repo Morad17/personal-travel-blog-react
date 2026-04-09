@@ -1,3 +1,9 @@
+export interface CountryVisit {
+  id: string;
+  date: string;
+  cities: string[];
+}
+
 export interface Country {
   id: string;
   name: string;
@@ -6,8 +12,8 @@ export interface Country {
   flagEmoji: string;
   coverImageId: string | null;
   coverImageUrl: string | null;
-  visitedAt: string | null;
   featured: boolean;
+  visits: CountryVisit[];
   createdAt: string;
   updatedAt: string;
   _count?: { posts: number };

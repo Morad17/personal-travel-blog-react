@@ -12,6 +12,7 @@ export async function getCountries(_req: Request, res: Response): Promise<void> 
     orderBy: { name: 'asc' },
     include: {
       _count: { select: { posts: { where: { published: true } } } },
+      visits: { orderBy: { date: 'asc' } },
     },
   });
   res.json(countries);
@@ -22,6 +23,7 @@ export async function getCountryBySlug(req: Request, res: Response): Promise<voi
   const country = await prisma.country.findUnique({
     where: { slug },
     include: {
+      visits: { orderBy: { date: 'asc' } },
       posts: {
         where: { published: true },
         orderBy: { createdAt: 'desc' },
@@ -46,13 +48,18 @@ export async function createCountry(req: Request, res: Response): Promise<void> 
   const coverImageId = file?.filename;
   const coverImageUrl = file?.path;
 
+  const { visits, ...countryData } = parsed.data;
+
   const country = await prisma.country.create({
     data: {
-      ...parsed.data,
-      visitedAt: parsed.data.visitedAt ? new Date(parsed.data.visitedAt) : undefined,
+      ...countryData,
       coverImageId,
       coverImageUrl,
+      ...(visits?.length
+        ? { visits: { create: visits.map((v) => ({ date: new Date(v.date), cities: v.cities })) } }
+        : {}),
     },
+    include: { visits: { orderBy: { date: 'asc' } } },
   });
   res.status(201).json(country);
 }
@@ -81,15 +88,25 @@ export async function updateCountry(req: Request, res: Response): Promise<void> 
     coverImageUrl = file.path;
   }
 
-  const country = await prisma.country.update({
-    where: { id },
-    data: {
-      ...parsed.data,
-      visitedAt: parsed.data.visitedAt ? new Date(parsed.data.visitedAt) : undefined,
-      coverImageId,
-      coverImageUrl,
-    },
-  });
+  const { visits, ...countryData } = parsed.data;
+
+  // Delete existing visits then recreate in a transaction
+  const [, country] = await prisma.$transaction([
+    prisma.countryVisit.deleteMany({ where: { countryId: id } }),
+    prisma.country.update({
+      where: { id },
+      data: {
+        ...countryData,
+        coverImageId,
+        coverImageUrl,
+        ...(visits?.length
+          ? { visits: { create: visits.map((v) => ({ date: new Date(v.date), cities: v.cities })) } }
+          : {}),
+      },
+      include: { visits: { orderBy: { date: 'asc' } } },
+    }),
+  ]);
+
   res.json(country);
 }
 

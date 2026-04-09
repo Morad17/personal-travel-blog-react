@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { X, MapPin, BookOpen } from 'lucide-react';
 import { useMapContext } from '../../context/MapContext';
-import { formatDateShort } from '../../utils/formatDate';
+import { formatDateUK } from '../../utils/formatDate';
 import styles from './CountrySidebar.module.scss';
 
 export default function CountrySidebar() {
@@ -37,7 +37,7 @@ export default function CountrySidebar() {
               {selectedCountry.visitedAt && (
                 <div className={styles.stat}>
                   <MapPin size={14} className={styles.statIcon} />
-                  <span>Visited {formatDateShort(selectedCountry.visitedAt)}</span>
+                  <span>Visited {formatDateUK(selectedCountry.visitedAt)}</span>
                 </div>
               )}
               <div className={styles.stat}>

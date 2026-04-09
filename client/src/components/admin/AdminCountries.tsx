@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import AsyncCreatableSelect from "react-select/async-creatable";
+import { City } from "country-state-city";
 import { countriesService } from "../../services/countriesService";
 import type { Country } from "../../types";
+import { formatDateUK } from "../../utils/formatDate";
 import styles from "./AdminTable.module.scss";
 import formStyles from "./CountryForm.module.scss";
 
@@ -204,10 +207,14 @@ const schema = z.object({
     .regex(/^[a-z0-9-]+$/),
   isoCode: z.string().length(2),
   flagEmoji: z.string().min(1),
-  visitedAt: z.string().optional(),
   featured: z.boolean().optional(),
 });
 type FormData = z.infer<typeof schema>;
+
+interface VisitRow {
+  date: string;
+  cities: string[];
+}
 
 function CountryForm({
   country,
@@ -218,6 +225,12 @@ function CountryForm({
 }) {
   const qc = useQueryClient();
   const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [visits, setVisits] = useState<VisitRow[]>(
+    country?.visits?.map((v) => ({
+      date: v.date.slice(0, 10),
+      cities: v.cities,
+    })) ?? []
+  );
 
   const {
     register,
@@ -232,12 +245,31 @@ function CountryForm({
       slug: country?.slug ?? "",
       isoCode: country?.isoCode ?? "",
       flagEmoji: country?.flagEmoji ?? "",
-      visitedAt: country?.visitedAt?.slice(0, 10) ?? "",
       featured: country?.featured ?? false,
     },
   });
 
   const selectedIso = watch("isoCode");
+
+  const loadCityOptions = useMemo(() => {
+    const allCities = selectedIso
+      ? (City.getCitiesOfCountry(selectedIso) ?? []).map((c) => ({
+          value: c.name,
+          label: c.name,
+        }))
+      : [];
+
+    return (inputValue: string) =>
+      Promise.resolve(
+        inputValue.length === 0
+          ? []
+          : allCities
+              .filter((c) =>
+                c.label.toLowerCase().startsWith(inputValue.toLowerCase())
+              )
+              .slice(0, 50)
+      );
+  }, [selectedIso]);
 
   function handleCountrySelect(iso: string) {
     const found = COUNTRIES.find((c) => c.iso === iso);
@@ -249,12 +281,37 @@ function CountryForm({
     setValue("slug", toSlug(found.name));
   }
 
+  function addVisit() {
+    setVisits((prev) => [...prev, { date: "", cities: [] }]);
+  }
+
+  function removeVisit(i: number) {
+    setVisits((prev) => prev.filter((_, idx) => idx !== i));
+  }
+
+  function updateVisitDate(i: number, value: string) {
+    setVisits((prev) =>
+      prev.map((v, idx) => (idx === i ? { ...v, date: value } : v))
+    );
+  }
+
+  function updateVisitCities(i: number, values: string[]) {
+    setVisits((prev) =>
+      prev.map((v, idx) => (idx === i ? { ...v, cities: values } : v))
+    );
+  }
+
   const save = useMutation({
     mutationFn: async (data: FormData) => {
       const fd = new FormData();
       Object.entries(data).forEach(([k, v]) => {
         if (v !== undefined) fd.append(k, String(v));
       });
+      // Serialize visits as JSON string for multipart form
+      const visitPayload = visits
+        .filter((v) => v.date)
+        .map((v) => ({ date: v.date, cities: v.cities }));
+      fd.append("visits", JSON.stringify(visitPayload));
       if (coverFile) fd.append("coverImage", coverFile);
       if (country) return countriesService.update(country.id, fd);
       return countriesService.create(fd);
@@ -292,15 +349,96 @@ function CountryForm({
             placeholder="slug (auto-filled)"
             className={formStyles.input}
           />
-          <input
-            {...register("visitedAt")}
-            type="date"
-            className={formStyles.input}
-          />
           <label className={formStyles.check}>
             <input type="checkbox" {...register("featured")} /> Featured
           </label>
         </div>
+
+        <div className={formStyles.visitsSection}>
+          <label className={formStyles.visitsLabel}>Visits</label>
+          {visits.map((v, i) => (
+            <div key={i} className={formStyles.visitRow}>
+              <input
+                type="date"
+                value={v.date}
+                onChange={(e) => updateVisitDate(i, e.target.value)}
+                className={formStyles.input}
+              />
+              <AsyncCreatableSelect
+                isMulti
+                loadOptions={loadCityOptions}
+                value={v.cities.map((c) => ({ value: c, label: c }))}
+                onChange={(selected) =>
+                  updateVisitCities(
+                    i,
+                    (selected as { value: string; label: string }[]).map(
+                      (s) => s.value
+                    )
+                  )
+                }
+                placeholder="Type to search cities..."
+                noOptionsMessage={({ inputValue }) =>
+                  inputValue ? "No cities found" : "Start typing..."
+                }
+                classNamePrefix="citySelect"
+                styles={{
+                  control: (base: object) => ({
+                    ...base,
+                    background: "var(--color-surface-2, #1e293b)",
+                    borderColor: "var(--color-border, #334155)",
+                    minHeight: "38px",
+                    fontSize: "0.875rem",
+                  }),
+                  menu: (base: object) => ({
+                    ...base,
+                    background: "var(--color-surface-2, #1e293b)",
+                    zIndex: 50,
+                  }),
+                  option: (base: object, { isFocused }: { isFocused: boolean }) => ({
+                    ...base,
+                    background: isFocused ? "var(--color-surface-3, #334155)" : "transparent",
+                    color: "var(--color-text, #f1f5f9)",
+                    fontSize: "0.875rem",
+                  }),
+                  multiValue: (base: object) => ({
+                    ...base,
+                    background: "var(--color-accent, #f59e0b)",
+                  }),
+                  multiValueLabel: (base: object) => ({
+                    ...base,
+                    color: "#000",
+                    fontSize: "0.8rem",
+                  }),
+                  multiValueRemove: (base: object) => ({
+                    ...base,
+                    color: "#000",
+                    ":hover": { background: "rgba(0,0,0,0.2)", color: "#000" },
+                  }),
+                  input: (base: object) => ({ ...base, color: "var(--color-text, #f1f5f9)" }),
+                  placeholder: (base: object) => ({
+                    ...base,
+                    color: "var(--color-text-muted, #94a3b8)",
+                  }),
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => removeVisit(i)}
+                className={formStyles.removeVisit}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addVisit}
+            className={formStyles.addVisit}
+          >
+            + Add Visit
+          </button>
+        </div>
+
         <input
           type="file"
           accept="image/*"
@@ -368,7 +506,7 @@ export default function AdminCountries() {
             <tr>
               <th>Country</th>
               <th>ISO</th>
-              <th>Visited</th>
+              <th>Visits</th>
               <th>Posts</th>
               <th>Actions</th>
             </tr>
@@ -380,7 +518,16 @@ export default function AdminCountries() {
                   {c.flagEmoji} {c.name}
                 </td>
                 <td>{c.isoCode}</td>
-                <td>{c.visitedAt ? c.visitedAt.slice(0, 10) : "–"}</td>
+                <td>
+                  {c.visits?.length
+                    ? c.visits.map((v) => (
+                        <div key={v.id}>
+                          <strong>{formatDateUK(v.date)}</strong>
+                          {v.cities.length > 0 && ` — ${v.cities.join(", ")}`}
+                        </div>
+                      ))
+                    : "–"}
+                </td>
                 <td>{c._count?.posts ?? 0}</td>
                 <td>
                   <div className={styles.actions}>

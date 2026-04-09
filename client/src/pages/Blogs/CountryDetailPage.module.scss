@@ -50,9 +50,23 @@
   }
 }
 
-.visited {
-  color: $color-text-muted;
-  font-size: $text-base;
+.visitsList {
+  list-style: none;
+  padding: 0;
+  margin: $space-2 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+
+  li {
+    color: $color-text-muted;
+    font-size: $text-sm;
+
+    strong {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+    }
+  }
 }
 
 .container {

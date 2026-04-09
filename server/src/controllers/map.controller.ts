@@ -9,9 +9,10 @@ export async function getVisitedCountries(_req: Request, res: Response): Promise
       slug: true,
       flagEmoji: true,
       coverImageUrl: true,
-      visitedAt: true,
+      visits: { orderBy: { date: 'asc' }, take: 1 },
       _count: { select: { posts: { where: { published: true } } } },
     },
+    where: { visits: { some: {} } },
     orderBy: { name: 'asc' },
   });
 
@@ -21,7 +22,7 @@ export async function getVisitedCountries(_req: Request, res: Response): Promise
     slug: c.slug,
     flagEmoji: c.flagEmoji,
     coverImageUrl: c.coverImageUrl,
-    visitedAt: c.visitedAt,
+    visitedAt: c.visits[0]?.date ?? null,
     postCount: c._count.posts,
   }));
 
