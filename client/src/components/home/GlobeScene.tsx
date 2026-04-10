@@ -77,7 +77,7 @@ export default function GlobeScene() {
 
   useEffect(() => {
     fetch("/geo/countries.geojson")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(`geo fetch ${r.status}`); return r.json(); })
       .then(setGeoData)
       .catch(console.error);
   }, []);
@@ -97,7 +97,7 @@ export default function GlobeScene() {
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const geoFeatures = geoData?.features ?? [];
+  const geoFeatures = Array.isArray(geoData?.features) ? geoData.features : [];
 
   const countryLayer = geoData
     ? new GeoJsonLayer({
