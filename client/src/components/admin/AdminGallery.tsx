@@ -430,7 +430,7 @@ export default function AdminGallery() {
           item={editItem}
           countries={countries}
           onClose={() => setEditItem(null)}
-          onSave={(id, data) => updateMutation.mutateAsync({ id, data })}
+          onSave={(id, data) => updateMutation.mutateAsync({ id, data }).then(() => {})}
         />
       )}
     </div>

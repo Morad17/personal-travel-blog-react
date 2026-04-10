@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import {
-  ChevronDown,
-  BookOpen,
-  Map as MapIcon,
-  Images,
-  Globe,
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { FaGlobeAfrica } from "react-icons/fa";
-import { FaMapLocationDot, FaBookAtlas } from "react-icons/fa6";
+import { FaBookAtlas } from "react-icons/fa6";
 import { IoImagesSharp } from "react-icons/io5";
 import styles from "./Hero.module.scss";
 

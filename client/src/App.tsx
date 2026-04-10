@@ -8,7 +8,6 @@ import CountryDetailPage from "./pages/Blogs/CountryDetailPage";
 import PostDetailPage from "./pages/PostDetail/PostDetailPage";
 import MapPage from "./pages/Map/MapPage";
 import GalleryPage from "./pages/Gallery/GalleryPage";
-import ContactPage from "./pages/Contact/ContactPage";
 import AdminPage from "./pages/Admin/AdminPage";
 
 const pageVariants = {
