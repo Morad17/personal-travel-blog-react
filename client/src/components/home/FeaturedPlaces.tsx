@@ -1,3 +1,4 @@
+import { Component, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -5,6 +6,12 @@ import { postsService } from "../../services/postsService";
 import PostCard from "../blog/PostCard";
 import GlobeScene from "./GlobeScene";
 import styles from "./FeaturedPlaces.module.scss";
+
+class GlobeErrorBoundary extends Component<{ children: ReactNode }, { crashed: boolean }> {
+  state = { crashed: false };
+  static getDerivedStateFromError() { return { crashed: true }; }
+  render() { return this.state.crashed ? null : this.props.children; }
+}
 
 const fadeUp = (delay = 0, duration = 0.7) => ({
   initial: { opacity: 0, y: 40 },
@@ -55,7 +62,7 @@ export default function FeaturedPlaces() {
             Countries visited so far
           </motion.span>
           <motion.div className={styles.mapInner} {...fadeLeft(0.25, 0.9)}>
-            <GlobeScene />
+            <GlobeErrorBoundary><GlobeScene /></GlobeErrorBoundary>
           </motion.div>
           <motion.div {...fadeUp(0.5, 0.5)}>
             <Link to="/map" className={styles.ctaLink}>
