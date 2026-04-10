@@ -39,25 +39,148 @@
   margin: 0 auto;
 }
 
-.filters {
+.flagPicker {
   display: flex;
-  gap: $space-4;
-  margin-bottom: $space-10;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  margin-bottom: $space-3;
 }
 
-.select {
-  padding: $space-3 $space-4;
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-md;
-  color: $color-text;
-  font-size: $text-sm;
-  @include focus-ring;
+.flagArrow {
+  font-size: 24px;
+  color: $color-text-muted;
+  padding: 0 $space-1;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: color $transition-base;
 
-  &:focus {
+  &:hover:not(:disabled) {
+    color: $color-text;
+  }
+
+  &:disabled {
+    opacity: 0.2;
+    cursor: default;
+  }
+}
+
+.flagRow {
+  display: flex;
+  gap: $space-3;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 0;
+  // hide scrollbar
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.flagBtn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  border: 2px solid transparent;
+  background: $color-surface-2;
+  @include flex-center;
+  transition:
+    border-color $transition-base,
+    background $transition-base;
+  font-size: 22px;
+
+  &:hover {
+    border-color: $color-border;
+  }
+}
+
+.flagBtnActive {
+  border-color: $color-accent !important;
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.pickerFlag {
+  width: 26px !important;
+  height: 20px !important;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+  gap: $space-4;
+}
+
+.countryTitle {
+  font-size: $text-xl;
+  font-weight: 700;
+  color: $color-text;
+  min-height: 2rem;
+}
+
+.movingToggle {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-shrink: 0;
+}
+
+.movingLabel {
+  font-size: $text-xs;
+  font-weight: 600;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.toggleBtn {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  transition: background $transition-base, border-color $transition-base;
+  flex-shrink: 0;
+
+  &.toggleBtnOn {
+    background: $color-accent;
     border-color: $color-accent;
   }
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  transition: transform $transition-base;
+
+  .toggleBtnOn & {
+    transform: translateX(18px);
+  }
+}
+
+// Static (non-moving) grid
+.staticColumns {
+  display: flex;
+  gap: $space-2;
+  align-items: flex-start;
+}
+
+.staticColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
 }
 
 .masonry {
@@ -72,17 +195,70 @@
   }
 }
 
+@keyframes scrollUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scrollDown {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .columns {
   display: flex;
   gap: $space-2;
   align-items: flex-start;
+  height: 80vh;
+  overflow: hidden;
+  // Fade images out at top and bottom
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
 }
 
 .column {
   flex: 1;
+  overflow: hidden;
+  // Pause all tracks in a column when hovering anywhere in that column
+  &:hover .columnTrack {
+    animation-play-state: paused;
+  }
+}
+
+.columnTrack {
   display: flex;
   flex-direction: column;
   gap: $space-2;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.trackUp {
+  animation-name: scrollUp;
+}
+
+.trackDown {
+  animation-name: scrollDown;
 }
 
 // Grouped by country layout
@@ -93,56 +269,7 @@
 }
 
 .countrySection {
-  display: flex;
-  gap: $space-8;
-  align-items: flex-start;
-
-  @include md {
-    flex-direction: row;
-  }
-
-  flex-direction: column;
-}
-
-.countryHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: $space-2;
-  flex-shrink: 0;
-  width: 140px;
-  padding-top: $space-1;
-
-  @include md {
-    position: sticky;
-    top: calc(#{$navbar-height} + #{$space-6});
-  }
-}
-
-.countryFlag {
-  width: 36px !important;
-  height: 27px !important;
-  border-radius: $radius-sm;
-  object-fit: cover;
-}
-
-.countryName {
-  font-size: $text-lg;
-  font-weight: 700;
-  color: $color-text;
-  line-height: 1.2;
-}
-
-.countryDateRange {
-  font-size: $text-xs;
-  color: $color-text-muted;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-}
-
-.countryGrid {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 .item {
