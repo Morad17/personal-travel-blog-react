@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import DeckGL from "@deck.gl/react";
-import { GeoJsonLayer } from "@deck.gl/layers";
-import { Map as MapGL } from "react-map-gl/maplibre";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { Map as MapGL, Source, Layer } from "react-map-gl/maplibre";
+import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useQuery } from "@tanstack/react-query";
 import { mapService } from "../../services/mapService";
@@ -14,9 +13,7 @@ const INITIAL_VIEW_STATE = {
   latitude: 20,
   zoom: 1.7,
   minZoom: 1.7,
-  pitch: 30,
-  minPitch: 30,
-  maxPitch: 30,
+  pitch: 0,
   bearing: 0,
 };
 
@@ -27,26 +24,27 @@ interface GeoProps {
   ISO_A2?: string;
   ISO_A2_EH?: string;
   NAME?: string;
+  _normIso?: string;
+  _visited?: boolean;
 }
 
 // Overseas territories whose ISO_A2_EH falls back to the sovereign country code.
-// Map them to their own ISO codes so they aren't coloured as the parent country.
 const TERRITORY_ISO: Record<string, string> = {
-  'French Guiana': 'GF',
-  'Martinique': 'MQ',
-  'Guadeloupe': 'GP',
-  'Réunion': 'RE',
-  'Mayotte': 'YT',
-  'Saint Pierre and Miquelon': 'PM',
-  'New Caledonia': 'NC',
-  'French Polynesia': 'PF',
-  'Wallis and Futuna': 'WF',
+  "French Guiana": "GF",
+  "Martinique": "MQ",
+  "Guadeloupe": "GP",
+  "Réunion": "RE",
+  "Mayotte": "YT",
+  "Saint Pierre and Miquelon": "PM",
+  "New Caledonia": "NC",
+  "French Polynesia": "PF",
+  "Wallis and Futuna": "WF",
 };
 
 interface HoverInfo {
   x: number;
   y: number;
-  object?: { properties: GeoProps };
+  properties: GeoProps;
 }
 
 interface MapSceneProps {
@@ -54,6 +52,48 @@ interface MapSceneProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialViewState?: any;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getIso(props: GeoProps): string {
+  if (props?.NAME && TERRITORY_ISO[props.NAME]) return TERRITORY_ISO[props.NAME];
+  const iso = props?.ISO_A2;
+  if (iso && iso !== "-99") return iso;
+  return props?.ISO_A2_EH || "";
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fillLayer: any = {
+  id: "country-fill",
+  type: "fill",
+  paint: {
+    "fill-color": [
+      "case",
+      ["==", ["get", "_visited"], true],
+      "rgba(245, 158, 11, 0.35)",
+      "rgba(20, 30, 48, 0.08)",
+    ],
+  },
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const lineLayer: any = {
+  id: "country-line",
+  type: "line",
+  paint: {
+    "line-color": [
+      "case",
+      ["==", ["get", "_visited"], true],
+      "rgba(245, 158, 11, 0.85)",
+      "rgba(255, 255, 255, 0.12)",
+    ],
+    "line-width": [
+      "case",
+      ["==", ["get", "_visited"], true],
+      1.5,
+      0.4,
+    ],
+  },
+};
 
 export default function MapScene({ isStatic = false, initialViewState }: MapSceneProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,6 +103,7 @@ export default function MapScene({ isStatic = false, initialViewState }: MapScen
   const [viewState, setViewState] = useState<any>(initialViewState ?? INITIAL_VIEW_STATE);
   const { setSelectedCountry } = useMapContext();
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<MapRef>(null);
 
   useEffect(() => {
     if (isStatic) return;
@@ -82,23 +123,23 @@ export default function MapScene({ isStatic = false, initialViewState }: MapScen
     queryFn: () => mapService.getVisited().then((r) => r.data),
   });
 
-  const visitedSet = new Map<string, MapCountry>(
-    visitedCountries?.map((c) => [c.isoCode, c]) ?? [],
+  const visitedSet = useMemo(
+    () => new Map<string, MapCountry>(
+      visitedCountries?.map((c) => [c.isoCode, c]) ?? []
+    ),
+    [visitedCountries]
   );
 
   useEffect(() => {
     fetch("/geo/countries.geojson")
       .then((r) => r.json())
       .then((data) => {
-        // Some countries (e.g. France) are MultiPolygons that include overseas
-        // territories far outside Europe. Strip any polygon whose centroid
-        // longitude falls outside the -20 to 55 European window.
-        const EUROPEAN_COUNTRIES = new Set(['France', 'Norway', 'Portugal', 'Spain']);
+        const EUROPEAN_COUNTRIES = new Set(["France", "Norway", "Portugal", "Spain"]);
         const fixed = {
           ...data,
           features: data.features.map((f: { geometry: { type: string; coordinates: number[][][][] }; properties: GeoProps }) => {
             if (
-              f.geometry.type === 'MultiPolygon' &&
+              f.geometry.type === "MultiPolygon" &&
               f.properties.NAME &&
               EUROPEAN_COUNTRIES.has(f.properties.NAME)
             ) {
@@ -107,10 +148,7 @@ export default function MapScene({ isStatic = false, initialViewState }: MapScen
                 const centLng = lngs.reduce((a, b) => a + b, 0) / lngs.length;
                 return centLng > -20 && centLng < 55;
               });
-              return {
-                ...f,
-                geometry: { ...f.geometry, coordinates: euroPolygons },
-              };
+              return { ...f, geometry: { ...f.geometry, coordinates: euroPolygons } };
             }
             return f;
           }),
@@ -120,85 +158,83 @@ export default function MapScene({ isStatic = false, initialViewState }: MapScen
       .catch(console.error);
   }, []);
 
-  const getIso = (props: GeoProps): string => {
-    if (props?.NAME && TERRITORY_ISO[props.NAME]) return TERRITORY_ISO[props.NAME];
-    const iso = props?.ISO_A2;
-    if (iso && iso !== "-99") return iso;
-    return props?.ISO_A2_EH || "";
-  };
+  const annotatedGeo = useMemo(() => {
+    if (!geoData) return null;
+    return {
+      ...geoData,
+      features: geoData.features.map((f: { properties: GeoProps }) => ({
+        ...f,
+        properties: {
+          ...f.properties,
+          _normIso: getIso(f.properties),
+          _visited: visitedSet.has(getIso(f.properties)),
+        },
+      })),
+    };
+  }, [geoData, visitedSet]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const layer = geoData
-    ? new (GeoJsonLayer as any)({
-        id: "countries",
-        data: geoData,
-        extruded: true,
-        wireframe: false,
-        pickable: true,
-        getElevation: (f: { properties: GeoProps }) =>
-          visitedSet.has(getIso(f.properties)) ? 180000 : 0,
-        getFillColor: (f: { properties: GeoProps }) => {
-          const iso = getIso(f.properties);
-          return visitedSet.has(iso) ? [245, 158, 11, 220] : [30, 41, 59, 180];
-        },
-        getLineColor: [255, 255, 255, 25],
-        getLineWidth: 1,
-        lineWidthMinPixels: 0.5,
-        updateTriggers: {
-          getFillColor: [visitedSet.size],
-          getElevation: [visitedSet.size],
-        },
-        transitions: { getElevation: 600 },
-        onHover: (info: {
-          x: number;
-          y: number;
-          object?: { properties: GeoProps };
-        }) => {
-          setHoverInfo(info.object ? info : null);
-        },
-        onClick: (info: { object?: { properties: GeoProps } }) => {
-          if (!info.object) return;
-          const iso = getIso(info.object.properties);
-          setSelectedCountry(visitedSet.get(iso) ?? null);
-        },
-      })
-    : null;
+  function onMove(e: { viewState: any }) {
+    const v = e.viewState;
+    const atMinZoom = v.zoom <= INITIAL_VIEW_STATE.minZoom;
+    setViewState({
+      ...v,
+      longitude: atMinZoom ? INITIAL_VIEW_STATE.longitude : v.longitude,
+    });
+  }
+
+  function onMouseMove(e: MapLayerMouseEvent) {
+    const f = e.features?.[0];
+    if (f) {
+      setHoverInfo({ x: e.point.x, y: e.point.y, properties: f.properties as GeoProps });
+    } else {
+      setHoverInfo(null);
+    }
+  }
+
+  function onClick(e: MapLayerMouseEvent) {
+    const f = e.features?.[0];
+    if (!f) return;
+    const iso = (f.properties as GeoProps)._normIso ?? "";
+    setSelectedCountry(visitedSet.get(iso) ?? null);
+  }
 
   return (
     <div className={styles.container} ref={containerRef}>
-      <DeckGL
-        viewState={viewState}
-        onViewStateChange={({ viewState: vs }) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const v = vs as any;
-          const atMinZoom = v.zoom <= INITIAL_VIEW_STATE.minZoom;
-          setViewState({
-            ...v,
-            latitude: Math.min(v.latitude, 20),
-            pitch: 30,
-            longitude: atMinZoom ? INITIAL_VIEW_STATE.longitude : v.longitude,
-          });
-        }}
-        controller={!isStatic}
-        layers={layer ? [layer] : []}
+      <MapGL
+        ref={mapRef}
+        {...viewState}
+        onMove={onMove}
+        mapStyle={MAP_STYLE}
+        style={{ width: "100%", height: "100%" }}
+        interactiveLayerIds={isStatic ? [] : ["country-fill"]}
+        onMouseMove={isStatic ? undefined : onMouseMove}
+        onClick={isStatic ? undefined : onClick}
+        dragPan={!isStatic}
+        scrollZoom={!isStatic}
+        touchZoomRotate={!isStatic}
       >
-        <MapGL mapStyle={MAP_STYLE} />
-      </DeckGL>
+        {annotatedGeo && (
+          <Source id="countries" type="geojson" data={annotatedGeo}>
+            <Layer {...fillLayer} />
+            <Layer {...lineLayer} />
+          </Source>
+        )}
+      </MapGL>
 
-      {hoverInfo?.object && (
+      {hoverInfo && (
         <div
           className={styles.tooltip}
           style={{ left: hoverInfo.x + 12, top: hoverInfo.y - 8 }}
         >
           {(() => {
-            const iso = getIso(hoverInfo.object.properties);
+            const iso = hoverInfo.properties._normIso ?? "";
             const visited = visitedSet.get(iso);
             return (
               <>
                 {visited && <span className={styles.visitedDot} />}
                 <span>
-                  {visited?.flagEmoji ?? ""}{" "}
-                  {hoverInfo.object.properties.NAME ?? iso}
+                  {hoverInfo.properties.NAME ?? iso}
                 </span>
                 {visited && (
                   <span className={styles.postCount}>

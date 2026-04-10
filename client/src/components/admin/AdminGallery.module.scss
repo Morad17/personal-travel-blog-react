@@ -1,5 +1,5 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .uploadPanel {
   @include glass-surface;
@@ -22,7 +22,40 @@
   align-items: center;
 }
 
-.fileInput { color: $color-text-muted; font-size: $text-sm; flex: 1; }
+.dropZone {
+  flex: 1;
+  min-width: 180px;
+  padding: $space-3 $space-4;
+  border: 1.5px dashed $color-border;
+  border-radius: $radius-md;
+  background: $color-surface-2;
+  cursor: pointer;
+  transition:
+    border-color $transition-base,
+    background $transition-base;
+  @include flex-center;
+
+  &:hover {
+    border-color: $color-accent;
+  }
+}
+
+.dropZoneActive {
+  border-color: $color-accent;
+  background: rgba($color-accent, 0.06);
+}
+
+.dropZoneText {
+  font-size: $text-sm;
+  color: $color-text-muted;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
 .select {
   padding: $space-2 $space-3;
@@ -42,7 +75,9 @@
   font-size: $text-sm;
   font-weight: 600;
   @include focus-ring;
-  &:disabled { opacity: 0.6; }
+  &:disabled {
+    opacity: 0.6;
+  }
 }
 
 .grid {
@@ -50,8 +85,12 @@
   grid-template-columns: repeat(3, 1fr);
   gap: $space-3;
 
-  @include md { grid-template-columns: repeat(5, 1fr); }
-  @include lg { grid-template-columns: repeat(8, 1fr); }
+  @include md {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @include lg {
+    grid-template-columns: repeat(8, 1fr);
+  }
 }
 
 .item {
@@ -60,8 +99,11 @@
   border-radius: $radius-md;
   overflow: hidden;
   background: $color-surface;
+  cursor: pointer;
 
-  &:hover .deleteItem { opacity: 1; }
+  &:hover .deleteItem {
+    opacity: 1;
+  }
 }
 
 .thumb {
@@ -74,7 +116,7 @@
   position: absolute;
   bottom: $space-1;
   left: $space-1;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   color: $color-accent;
   font-size: 9px;
   font-weight: 700;
@@ -86,7 +128,7 @@
   position: absolute;
   top: $space-1;
   right: $space-1;
-  background: rgba(239,68,68,0.85);
+  background: rgba(239, 68, 68, 0.85);
   color: white;
   border-radius: 50%;
   width: 20px;
@@ -96,4 +138,147 @@
   opacity: 0;
   transition: opacity $transition-base;
   @include focus-ring;
+}
+
+.metaRow {
+  display: flex;
+  gap: $space-3;
+  margin-top: $space-3;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dateInput {
+  padding: $space-2 $space-3;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text;
+  font-size: $text-sm;
+  @include focus-ring;
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+  }
+}
+
+.locationSelect {
+  flex: 1;
+  min-width: 200px;
+}
+
+.captionInput {
+  flex: 1;
+  min-width: 160px;
+  padding: $space-2 $space-3;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text;
+  font-size: $text-sm;
+  @include focus-ring;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+}
+
+// Edit modal
+.editModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: $z-modal;
+  @include flex-center;
+}
+
+.editForm {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  width: 420px;
+  max-width: calc(100vw - #{$space-8});
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.editHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-2;
+}
+
+.editTitle {
+  font-size: $text-base;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.editClose {
+  color: $color-text-muted;
+  font-size: $text-sm;
+  padding: $space-1 $space-2;
+  border-radius: $radius-md;
+  transition: color $transition-base;
+  @include focus-ring;
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.editLabel {
+  font-size: $text-xs;
+  font-weight: 600;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.editSelect {
+  padding: $space-2 $space-3;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text;
+  font-size: $text-sm;
+  width: 100%;
+  @include focus-ring;
+}
+
+.editActions {
+  display: flex;
+  gap: $space-3;
+  justify-content: flex-end;
+  margin-top: $space-2;
+}
+
+.cancelBtn {
+  padding: $space-2 $space-4;
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text-muted;
+  font-size: $text-sm;
+  @include focus-ring;
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.saveBtn {
+  padding: $space-2 $space-5;
+  background: $color-accent;
+  color: #000;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 600;
+  @include focus-ring;
+  &:disabled {
+    opacity: 0.6;
+  }
 }

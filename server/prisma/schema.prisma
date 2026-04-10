@@ -65,7 +65,7 @@ model PostMedia {
 }
 
 model GalleryItem {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   publicId     String
   secureUrl    String
   thumbnailUrl String
@@ -75,8 +75,12 @@ model GalleryItem {
   caption      String?
   tags         String[]
   countryId    String?
-  country      Country? @relation(fields: [countryId], references: [id])
-  createdAt    DateTime @default(now())
+  country      Country?  @relation(fields: [countryId], references: [id])
+  takenAt      DateTime?
+  latitude     Float?
+  longitude    Float?
+  location     String?
+  createdAt    DateTime  @default(now())
 }
 
 model ContactMessage {

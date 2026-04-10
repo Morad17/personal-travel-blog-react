@@ -6,6 +6,10 @@ export const createGalleryItemSchema = z.object({
     typeof val === 'string' ? val.split(',').map((t) => t.trim()).filter(Boolean) : val
   ).optional(),
   countryId: z.string().optional(),
+  takenAt: z.string().optional(),
+  latitude: z.coerce.number().optional(),
+  longitude: z.coerce.number().optional(),
+  location: z.string().optional(),
 });
 
 export const updateGalleryItemSchema = createGalleryItemSchema.partial();

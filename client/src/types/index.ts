@@ -60,7 +60,11 @@ export interface GalleryItem {
   caption: string | null;
   tags: string[];
   countryId: string | null;
-  country?: Pick<Country, 'name' | 'slug' | 'flagEmoji'> | null;
+  country?: Pick<Country, 'name' | 'slug' | 'flagEmoji' | 'isoCode'> | null;
+  takenAt: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  location: string | null;
   createdAt: string;
 }
 

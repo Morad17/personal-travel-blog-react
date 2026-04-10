@@ -22,7 +22,7 @@ export async function getGallery(req: Request, res: Response): Promise<void> {
       skip,
       take: parseInt(limit),
       orderBy: { createdAt: 'desc' },
-      include: { country: { select: { name: true, slug: true, flagEmoji: true } } },
+      include: { country: { select: { name: true, slug: true, flagEmoji: true, isoCode: true } } },
     }),
     prisma.galleryItem.count({ where }),
   ]);
@@ -37,7 +37,7 @@ export async function createGalleryItems(req: Request, res: Response): Promise<v
     return;
   }
 
-  const { caption, tags, countryId } = req.body as Record<string, string | undefined>;
+  const { caption, tags, countryId, takenAt, latitude, longitude, location } = req.body as Record<string, string | undefined>;
   const parsedTags = tags
     ? tags.split(',').map((t) => t.trim()).filter(Boolean)
     : [];
@@ -60,6 +60,10 @@ export async function createGalleryItems(req: Request, res: Response): Promise<v
           caption: caption || undefined,
           tags: parsedTags,
           countryId: countryId || undefined,
+          takenAt: takenAt ? new Date(takenAt) : undefined,
+          latitude: latitude != null && latitude !== '' ? parseFloat(latitude) : undefined,
+          longitude: longitude != null && longitude !== '' ? parseFloat(longitude) : undefined,
+          location: location || undefined,
         },
       });
     })
@@ -76,9 +80,13 @@ export async function updateGalleryItem(req: Request, res: Response): Promise<vo
     return;
   }
 
+  const { takenAt, ...rest } = parsed.data;
   const item = await prisma.galleryItem.update({
     where: { id },
-    data: parsed.data,
+    data: {
+      ...rest,
+      ...(takenAt !== undefined ? { takenAt: takenAt ? new Date(takenAt) : null } : {}),
+    },
   });
   res.json(item);
 }
