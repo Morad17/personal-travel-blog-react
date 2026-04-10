@@ -74,6 +74,11 @@ export interface ContactMessage {
   createdAt: string;
 }
 
+export interface MapCountryVisit {
+  date: string;
+  cities: string[];
+}
+
 export interface MapCountry {
   isoCode: string;
   name: string;
@@ -81,6 +86,7 @@ export interface MapCountry {
   flagEmoji: string;
   coverImageUrl: string | null;
   visitedAt: string | null;
+  visits: MapCountryVisit[];
   postCount: number;
 }
 

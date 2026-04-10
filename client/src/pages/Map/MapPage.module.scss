@@ -4,25 +4,45 @@
 .page {
   height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding-top: $navbar-height;
   overflow: hidden;
 }
 
-.header {
-  padding: 10px $space-8;
+.panel {
+  width: 17vw;
+  min-width: 200px;
+  height: 100%;
+  overflow-y: auto;
+  padding: $space-6 $space-5;
+  border-right: 1px solid $color-border;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
   flex-shrink: 0;
+
+  scrollbar-width: thin;
+  scrollbar-color: $color-border transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: $color-border; border-radius: 2px; }
 }
 
 .label {
   @include label-text;
-  display: block;
-  margin-bottom: $space-2;
 }
 
 .title {
   @include display-heading;
-  font-size: $text-3xl;
+  font-size: $text-xl;
+  line-height: 1.2;
+}
+
+.instructions {
+  font-size: $text-xs;
+  color: $color-text-muted;
+  line-height: 1.6;
 }
 
 .mapContainer {

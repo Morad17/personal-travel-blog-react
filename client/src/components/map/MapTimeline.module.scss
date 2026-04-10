@@ -1,0 +1,76 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.timeline {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: $space-2;
+  // Use a left border as the timeline spine
+  border-left: 1px solid $color-border;
+  margin-left: $space-2;
+}
+
+.yearGroup {
+  margin-bottom: $space-5;
+}
+
+.year {
+  font-size: $text-xs;
+  font-weight: 700;
+  color: $color-accent;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 0 $space-2 $space-4;
+  display: block;
+}
+
+.entry {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding: $space-2 0 $space-2 $space-4;
+}
+
+.dot {
+  position: absolute;
+  left: -4px;
+  top: 12px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $color-accent;
+  flex-shrink: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.date {
+  font-size: $text-xs;
+  color: $color-text-muted;
+}
+
+.country {
+  font-size: $text-sm;
+  color: $color-text;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.flag {
+  border-radius: 2px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.cities {
+  font-size: $text-xs;
+  color: $color-text-muted;
+  line-height: 1.4;
+}

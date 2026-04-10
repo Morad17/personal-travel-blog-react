@@ -29,6 +29,20 @@ interface GeoProps {
   NAME?: string;
 }
 
+// Overseas territories whose ISO_A2_EH falls back to the sovereign country code.
+// Map them to their own ISO codes so they aren't coloured as the parent country.
+const TERRITORY_ISO: Record<string, string> = {
+  'French Guiana': 'GF',
+  'Martinique': 'MQ',
+  'Guadeloupe': 'GP',
+  'Réunion': 'RE',
+  'Mayotte': 'YT',
+  'Saint Pierre and Miquelon': 'PM',
+  'New Caledonia': 'NC',
+  'French Polynesia': 'PF',
+  'Wallis and Futuna': 'WF',
+};
+
 interface HoverInfo {
   x: number;
   y: number;
@@ -75,11 +89,39 @@ export default function MapScene({ isStatic = false, initialViewState }: MapScen
   useEffect(() => {
     fetch("/geo/countries.geojson")
       .then((r) => r.json())
-      .then(setGeoData)
+      .then((data) => {
+        // Some countries (e.g. France) are MultiPolygons that include overseas
+        // territories far outside Europe. Strip any polygon whose centroid
+        // longitude falls outside the -20 to 55 European window.
+        const EUROPEAN_COUNTRIES = new Set(['France', 'Norway', 'Portugal', 'Spain']);
+        const fixed = {
+          ...data,
+          features: data.features.map((f: { geometry: { type: string; coordinates: number[][][][] }; properties: GeoProps }) => {
+            if (
+              f.geometry.type === 'MultiPolygon' &&
+              f.properties.NAME &&
+              EUROPEAN_COUNTRIES.has(f.properties.NAME)
+            ) {
+              const euroPolygons = f.geometry.coordinates.filter((poly) => {
+                const lngs = poly[0].map((c) => c[0]);
+                const centLng = lngs.reduce((a, b) => a + b, 0) / lngs.length;
+                return centLng > -20 && centLng < 55;
+              });
+              return {
+                ...f,
+                geometry: { ...f.geometry, coordinates: euroPolygons },
+              };
+            }
+            return f;
+          }),
+        };
+        setGeoData(fixed);
+      })
       .catch(console.error);
   }, []);
 
   const getIso = (props: GeoProps): string => {
+    if (props?.NAME && TERRITORY_ISO[props.NAME]) return TERRITORY_ISO[props.NAME];
     const iso = props?.ISO_A2;
     if (iso && iso !== "-99") return iso;
     return props?.ISO_A2_EH || "";
@@ -129,7 +171,13 @@ export default function MapScene({ isStatic = false, initialViewState }: MapScen
         onViewStateChange={({ viewState: vs }) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const v = vs as any;
-          setViewState({ ...v, latitude: Math.min(v.latitude, 20), pitch: 30 });
+          const atMinZoom = v.zoom <= INITIAL_VIEW_STATE.minZoom;
+          setViewState({
+            ...v,
+            latitude: Math.min(v.latitude, 20),
+            pitch: 30,
+            longitude: atMinZoom ? INITIAL_VIEW_STATE.longitude : v.longitude,
+          });
         }}
         controller={!isStatic}
         layers={layer ? [layer] : []}
