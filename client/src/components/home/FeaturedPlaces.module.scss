@@ -57,6 +57,11 @@
   align-items: stretch;
   padding: $space-4 $space-8 $space-8;
   gap: $space-3;
+
+  @media (max-width: #{$bp-lg - 1px}) {
+    position: static;
+    height: auto;
+  }
 }
 
 .mapCaption {
@@ -74,6 +79,10 @@
   cursor: grab;
 
   &:active { cursor: grabbing; }
+
+  @media (max-width: #{$bp-lg - 1px}) {
+    height: 50vh;
+  }
 }
 
 // ── Right: posts ─────────────────────────────────────────────────────────────
@@ -81,6 +90,8 @@
 .postsCol {
   padding: $space-4 $space-8 $space-8;
   overflow-y: auto;
+  position: relative;
+  z-index: 2;
 }
 
 .grid {

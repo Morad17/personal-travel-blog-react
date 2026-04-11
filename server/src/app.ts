@@ -9,7 +9,8 @@ import { errorHandler } from './middleware/errorHandler';
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
+const allowedOrigins = [env.CLIENT_URL, 'http://localhost:5173'].filter(Boolean);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -73,7 +73,7 @@ export default function FeaturedPlaces() {
 
         {/* Right — subtitle + cards slide in from right, staggered */}
         <div className={styles.postsCol}>
-          <motion.p className={styles.subtitle} {...fadeRight(0.15, 0.6)}>
+          <motion.p className={styles.subtitle} {...fadeRight(0.15, 0.6)} viewport={{ once: true, margin: "-80px" }}>
             The latest stories from the road
           </motion.p>
           <div className={styles.grid}>
