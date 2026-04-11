@@ -7,6 +7,13 @@
   flex-direction: row;
   padding-top: $navbar-height;
   overflow: hidden;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
 }
 
 .panel {
@@ -27,6 +34,17 @@
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: $color-border; border-radius: 2px; }
+
+  @media (max-width: #{$bp-md - 1px}) {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    overflow-y: visible;
+    border-right: none;
+    border-bottom: 1px solid $color-border;
+    order: 2;
+    padding: $space-5 $space-4;
+  }
 }
 
 .label {
@@ -49,4 +67,10 @@
   flex: 1;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    height: 55vh;
+    flex: none;
+    order: 1;
+  }
 }

@@ -37,6 +37,15 @@
     rgba(10, 10, 15, 0.85) 49%,
     rgba(10, 10, 15, 0.25) 100%
   );
+  @media (max-width: #{$bp-md - 1px}) {
+    background: linear-gradient(
+      to top,
+      rgba(10, 10, 15, 0.97) 0%,
+      rgba(10, 10, 15, 0.95) 25%,
+      rgba(10, 10, 15, 0.9) 59%,
+      rgba(10, 10, 15, 0.25) 100%
+    );
+  }
   z-index: 1;
 }
 
@@ -64,9 +73,12 @@
   align-items: center;
   gap: $space-6;
   padding: $space-10 $space-8;
+  @media (max-width: #{$bp-lg - 1px}) {
+    padding-left: $space-12;
+  }
 }
 
-// Title + profile pic stacked, centered
+// Title + profile pic
 .bioHeader {
   display: flex;
   flex-direction: column;
@@ -76,7 +88,7 @@
 
 .journalTitle {
   font-family: $font-display;
-  font-size: clamp(1.8rem, 4.5vw, 6rem);
+  font-size: clamp(2.8rem, 4.5vw, 6rem);
   font-weight: 800;
   color: $color-text;
   line-height: 1;
@@ -99,6 +111,10 @@
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
   position: relative;
   z-index: 2;
+  @media (max-width: #{$bp-lg - 1px}) {
+    width: 96px;
+    height: 96px;
+  }
 }
 
 .bioText {
@@ -119,7 +135,9 @@
   align-items: center;
   flex-shrink: 0;
   color: $color-text;
-  transition: color $transition-base, border-color $transition-base;
+  transition:
+    color $transition-base,
+    border-color $transition-base;
   @include focus-ring;
   border: 1px solid #ffffff3d;
   padding: 5px;

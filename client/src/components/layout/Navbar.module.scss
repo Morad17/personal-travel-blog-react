@@ -1,5 +1,5 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .navbar {
   position: fixed;
@@ -8,7 +8,10 @@
   right: 0;
   z-index: $z-navbar;
   height: $navbar-height;
-  transition: background $transition-slow, backdrop-filter $transition-slow, border-color $transition-slow;
+  transition:
+    background $transition-slow,
+    backdrop-filter $transition-slow,
+    border-color $transition-slow;
   border-bottom: 1px solid transparent;
 }
 
@@ -23,6 +26,9 @@
   @include container;
   height: 100%;
   @include flex-between;
+  @media (max-width: #{$bp-lg - 1px}) {
+    padding-left: 5rem;
+  }
 }
 
 .logo {
@@ -32,17 +38,25 @@
   letter-spacing: -0.01em;
   transition: opacity $transition-base;
 
-  &:hover { opacity: 0.8; }
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
-.logoText { color: $color-text; }
-.logoDot { color: $color-accent; }
+.logoText {
+  color: $color-text;
+}
+.logoDot {
+  color: $color-accent;
+}
 
 .desktopNav {
   display: none;
   gap: $space-8;
 
-  @include lg { display: flex; }
+  @include lg {
+    display: flex;
+  }
 }
 
 .navLink {
@@ -55,7 +69,7 @@
   @include focus-ring;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -4px;
     left: 0;
@@ -67,14 +81,18 @@
 
   &:hover {
     color: $color-text;
-    &::after { width: 100%; }
+    &::after {
+      width: 100%;
+    }
   }
 }
 
 .active {
   color: $color-text !important;
 
-  &::after { width: 100% !important; }
+  &::after {
+    width: 100% !important;
+  }
 }
 
 .menuBtn {
@@ -83,7 +101,9 @@
   padding: $space-2;
   @include focus-ring;
 
-  @include lg { display: none; }
+  @include lg {
+    display: none;
+  }
 }
 
 .mobileMenu {
@@ -92,6 +112,7 @@
   right: 0;
   bottom: 0;
   width: 280px;
+  height: 100vh;
   background: $color-surface;
   border-left: 1px solid $color-border;
   z-index: $z-navbar;

@@ -77,7 +77,10 @@ function StaticGrid({
 }: {
   items: GalleryItem[];
   numCols: number;
-  onItemClick: (e: React.MouseEvent<HTMLButtonElement>, item: GalleryItem) => void;
+  onItemClick: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    item: GalleryItem,
+  ) => void;
 }) {
   const columns = Array.from({ length: numCols }, (_, ci) =>
     items.filter((_, i) => i % numCols === ci),
@@ -87,7 +90,11 @@ function StaticGrid({
       {columns.map((col, ci) => (
         <div key={ci} className={styles.staticColumn}>
           {col.map((item) => (
-            <GalleryItemCard key={item.id} item={item} onItemClick={onItemClick} />
+            <GalleryItemCard
+              key={item.id}
+              item={item}
+              onItemClick={onItemClick}
+            />
           ))}
         </div>
       ))}
@@ -154,7 +161,13 @@ export default function GalleryPage() {
   useEffect(() => {
     const update = () =>
       setNumCols(
-        window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : 2,
+        window.innerWidth >= 1024
+          ? 4
+          : window.innerWidth >= 768
+            ? 3
+            : window.innerWidth >= 480
+              ? 2
+              : 1,
       );
     update();
     window.addEventListener("resize", update);
